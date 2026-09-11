@@ -42,6 +42,11 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     notificationEvents: Flow<String>,
 ) {
+    if (!settings.pillReminderEnabled) {
+        PausedScheduleContent(modifier)
+        return
+    }
+
     val locale = androidx.compose.ui.text.intl.Locale.current.platformLocale
 
     val pillLogs by viewModel.pillLogs.collectAsState()
@@ -161,6 +166,34 @@ fun HomeScreen(
                 selectedDate = null
             }
         )
+    }
+}
+
+@Composable
+private fun PausedScheduleContent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.pill_schedule_paused_title),
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+                Text(
+                    text = stringResource(R.string.pill_schedule_paused_message),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
     }
 }
 

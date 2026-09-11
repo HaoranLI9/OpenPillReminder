@@ -23,6 +23,8 @@
     <string name="notes">备注</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
+    <string name="pill_schedule_paused_title">服药计划已暂停</string>
+    <string name="pill_schedule_paused_message">当前不会发送服药或购药提醒。准备好后，请先在“设置”中选择下一次第一片药日期，再启用服药提醒。</string>
 
     <!-- 设置 -->
     <string name="section_profile">个人资料</string>
@@ -34,6 +36,9 @@
     <string name="section_privacy">隐私</string>
 
     <string name="your_name">你的姓名</string>
+    <string name="pill_reminder_enabled">启用服药提醒</string>
+    <string name="pill_reminder_enabled_desc">正在按照当前服药计划发送提醒。</string>
+    <string name="pill_reminder_paused_desc">已暂停。确定下次开始日期后再启用。</string>
     <string name="active_pills">有效药片天数</string>
     <string name="break_days">停药天数</string>
     <string name="placebo_label">停药日服用安慰剂</string>
@@ -41,6 +46,7 @@
     <string name="first_pill_date">第一片药日期</string>
     <string name="reminder_time">提醒时间</string>
     <string name="buying_reminder">启用购药提醒</string>
+    <string name="buying_reminder_paused_desc">启用服药提醒后才会生效。</string>
     <string name="reminder_day">提醒日</string>
     <string name="theme_mode">主题模式</string>
     <string name="material_you">动态颜色（Material You）</string>

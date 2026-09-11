@@ -16,10 +16,19 @@ class BootReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.IO).launch {
                 val settings = SettingsRepository(context).settingsFlow.first()
 
-                ReminderScheduler.schedulePillReminder(context, settings.reminderTime)
+                if (settings.pillReminderEnabled) {
+                    ReminderScheduler.schedulePillReminder(
+                        context,
+                        settings.reminderTime,
+                        settings.firstPillDate,
+                    )
 
-                if (settings.buyingReminder) {
-                    ReminderScheduler.scheduleBuyingReminder(context, settings.buyingReminderTime)
+                    if (settings.buyingReminder) {
+                        ReminderScheduler.scheduleBuyingReminder(context, settings.buyingReminderTime)
+                    }
+                } else {
+                    ReminderScheduler.cancelPillAlarm(context)
+                    ReminderScheduler.cancelBuyingAlarm(context)
                 }
 
                 pendingResult.finish()

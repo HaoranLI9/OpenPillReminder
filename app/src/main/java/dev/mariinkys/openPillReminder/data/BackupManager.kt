@@ -48,8 +48,14 @@ object BackupManager {
             context.dataStore.edit { prefs ->
                 prefs.clear()
 
+                SettingsKeys.HAS_REQUESTED_PERMISSIONS.let { key ->
+                    if (data.has(key.name)) prefs[key] = data.getBoolean(key.name)
+                }
                 SettingsKeys.USER_NAME.let { key ->
                     if (data.has(key.name)) prefs[key] = data.getString(key.name)
+                }
+                SettingsKeys.PILL_REMINDER_ENABLED.let { key ->
+                    if (data.has(key.name)) prefs[key] = data.getBoolean(key.name)
                 }
                 SettingsKeys.ACTIVE_PILLS.let { key ->
                     if (data.has(key.name)) prefs[key] = data.getInt(key.name)
