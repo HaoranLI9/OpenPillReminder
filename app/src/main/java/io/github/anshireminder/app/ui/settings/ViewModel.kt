@@ -5,7 +5,9 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.anshireminder.app.data.BackupManager
+import io.github.anshireminder.app.data.PillLogRepository
 import io.github.anshireminder.app.data.SettingsRepository
+import io.github.anshireminder.app.model.FirstDoseReminderNoticePolicy
 import io.github.anshireminder.app.model.SettingsState
 import io.github.anshireminder.app.worker.ReminderScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,11 +18,15 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 @OptIn(kotlinx.coroutines.FlowPreview::class)
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = SettingsRepository(application)
+    private val pillLogRepository = PillLogRepository(application)
+    private val shownPastDueFirstDoseWarnings = mutableSetOf<Pair<java.time.LocalDate, LocalTime>>()
 
     // needed for showing the permissions only the first time the user opens the app
     private val _isLoaded = MutableStateFlow(false)
@@ -29,6 +35,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     // ui state, pretty obvious
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState.asStateFlow()
+
+    private val _pastDueFirstDoseWarning = MutableStateFlow<LocalTime?>(null)
+    val pastDueFirstDoseWarning: StateFlow<LocalTime?> = _pastDueFirstDoseWarning.asStateFlow()
 
     // needed for showing the permissions only the first time the user opens the app
     val showPermissionRequest = combine(isLoaded, _uiState) { loaded, state ->
@@ -89,6 +98,25 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             ReminderScheduler.cancelBuyingAlarm(getApplication())
         }
 
+        maybeShowPastDueFirstDoseWarning(settings)
+
+    }
+
+    fun dismissPastDueFirstDoseWarning() {
+        _pastDueFirstDoseWarning.value = null
+    }
+
+    private suspend fun maybeShowPastDueFirstDoseWarning(settings: SettingsState) {
+        val now = LocalDateTime.now()
+        val alreadyTaken = pillLogRepository.pillLogsFlow.first()[now.toLocalDate()]?.taken == true
+        val warningKey = settings.firstPillDate to settings.reminderTime
+
+        if (
+            FirstDoseReminderNoticePolicy.shouldShow(settings, now, alreadyTaken) &&
+            shownPastDueFirstDoseWarnings.add(warningKey)
+        ) {
+            _pastDueFirstDoseWarning.value = settings.reminderTime
+        }
     }
 
     fun createBackup(uri: Uri) {

@@ -11,11 +11,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -42,6 +44,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.flow.Flow
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 
 @Composable
@@ -73,6 +77,7 @@ fun AppLayout(
     val settings by settingsViewModel.uiState.collectAsState()
     val isLoaded by settingsViewModel.isLoaded.collectAsState()
     val showPermissions by settingsViewModel.showPermissionRequest.collectAsState(initial = false)
+    val pastDueFirstDoseWarning by settingsViewModel.pastDueFirstDoseWarning.collectAsState()
 
     SecureWindow(enabled = settings.preventScreenshots)
 
@@ -125,6 +130,25 @@ fun AppLayout(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val backupState by settingsViewModel.backupState.collectAsState()
+
+    pastDueFirstDoseWarning?.let { reminderTime ->
+        val locale = androidx.compose.ui.text.intl.Locale.current.platformLocale
+        val formattedTime = reminderTime.format(
+            DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale)
+        )
+        AlertDialog(
+            onDismissRequest = settingsViewModel::dismissPastDueFirstDoseWarning,
+            title = { Text(stringResource(R.string.first_dose_time_passed_title)) },
+            text = {
+                Text(stringResource(R.string.first_dose_time_passed_message, formattedTime))
+            },
+            confirmButton = {
+                TextButton(onClick = settingsViewModel::dismissPastDueFirstDoseWarning) {
+                    Text(stringResource(R.string.ok))
+                }
+            },
+        )
+    }
 
     LaunchedEffect(backupState) {
         when (val state = backupState) {

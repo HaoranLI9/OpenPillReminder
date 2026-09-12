@@ -88,6 +88,8 @@
     <string name="select">选择</string>
     <string name="pick_color">选择颜色</string>
     <string name="ok" tools:ignore="ButtonCase,Typos">确定</string>
+    <string name="first_dose_time_passed_title">今天的第一片药还没有记录</string>
+    <string name="first_dose_time_passed_message">提醒时间 %1$s 已经过去。安时下次会在明天 %1$s 提醒你。如果今天已经服用，请在首页把今天标记为已服用。</string>
     <string name="custom_color">自定义颜色</string>
 
     <!-- 关于 -->

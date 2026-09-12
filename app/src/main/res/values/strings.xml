@@ -91,6 +91,8 @@
     <string name="select">Select</string>
     <string name="pick_color">Pick a Color</string>
     <string name="ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="first_dose_time_passed_title">Today\'s first pill is still unlogged</string>
+    <string name="first_dose_time_passed_message">Your reminder time of %1$s has already passed. Anshi will next remind you tomorrow at %1$s. If you have already taken it, mark today as taken on the Home screen.</string>
     <string name="custom_color">Custom Color</string>
 
     <!-- About -->
