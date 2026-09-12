@@ -3,6 +3,7 @@ package io.github.anshireminder.app.worker
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import io.github.anshireminder.app.data.PillLogRepository
 import io.github.anshireminder.app.data.SettingsRepository
 import io.github.anshireminder.app.model.PillReminderPolicy
@@ -33,6 +34,13 @@ class PillAlarmReceiver : BroadcastReceiver() {
 
                 val shouldSend = PillReminderPolicy.shouldSend(settings, today, alreadyTaken)
 
+                Log.i(
+                    TAG,
+                    "pill alarm fired attempt=${repeatIndex + 1} repeatIndex=$repeatIndex " +
+                        "strong=${settings.strongReminderEnabled} enabled=${settings.pillReminderEnabled} " +
+                        "taken=$alreadyTaken shouldSend=$shouldSend"
+                )
+
                 // Only the daily alarm schedules the next day, and doing so also
                 // clears any nag left over from the previous cycle.
                 if (repeatIndex == 0 && settings.pillReminderEnabled) {
@@ -45,15 +53,8 @@ class PillAlarmReceiver : BroadcastReceiver() {
                 }
 
                 if (shouldSend) {
-                    sendPillNotification(
-                        context,
-                        settings.userName,
-                        isBreakDay,
-                        today,
-                        strong = settings.strongReminderEnabled,
-                    )
-
-                    // Strong reminders keep nagging until the pill is logged.
+                    // Queue the next nag before posting anything, so a failure
+                    // while showing the notification cannot break the chain.
                     if (
                         PillReminderPolicy.shouldRepeat(
                             settings.strongReminderEnabled,
@@ -63,12 +64,32 @@ class PillAlarmReceiver : BroadcastReceiver() {
                     ) {
                         ReminderScheduler.scheduleRepeatPillReminder(context, repeatIndex + 1)
                     }
+
+                    try {
+                        sendPillNotification(
+                            context,
+                            settings.userName,
+                            isBreakDay,
+                            today,
+                            strong = settings.strongReminderEnabled,
+                            attempt = repeatIndex + 1,
+                        )
+                    } catch (e: Exception) {
+                        Log.e(TAG, "failed to post reminder notification", e)
+                    }
                 } else {
+                    Log.i(TAG, "nothing to send, clearing any pending nag")
                     ReminderScheduler.cancelRepeatAlarm(context)
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "pill alarm handling failed", e)
             } finally {
                 pendingResult.finish()
             }
         }
+    }
+
+    private companion object {
+        const val TAG = "AnshiReminder"
     }
 }

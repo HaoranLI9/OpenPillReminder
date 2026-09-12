@@ -11,6 +11,13 @@ import java.time.LocalDate
 const val CHANNEL_ID = "pill_reminder_channel"
 const val STRONG_CHANNEL_ID = "pill_reminder_strong_channel"
 
+private const val PILL_NOTIFICATION_ID = 1
+private const val BUYING_NOTIFICATION_ID = 2
+
+// Strong attempts get their own ids so each one alerts again instead of quietly
+// updating the previous notification.
+private const val STRONG_NOTIFICATION_ID_BASE = 100
+
 fun createNotificationChannel(context: Context) {
     val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -59,6 +66,7 @@ fun sendPillNotification(
     isBreakDay: Boolean,
     date: LocalDate,
     strong: Boolean = false,
+    attempt: Int = 1,
 ) {
     val title = context.getString(
         if (isBreakDay) R.string.notif_placebo_title else R.string.notif_pill_title
@@ -113,7 +121,18 @@ fun sendPillNotification(
     }
 
     val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    manager.notify(1, builder.build())
+
+    if (strong) {
+        val notificationId = STRONG_NOTIFICATION_ID_BASE + attempt
+        // Keep only the latest nag in the shade, but with a fresh id so the
+        // system treats it as a new alert.
+        if (attempt > 1) {
+            manager.cancel(STRONG_NOTIFICATION_ID_BASE + attempt - 1)
+        }
+        manager.notify(notificationId, builder.build())
+    } else {
+        manager.notify(PILL_NOTIFICATION_ID, builder.build())
+    }
 }
 
 fun sendBuyingNotification(context: Context, userName: String) {
@@ -128,7 +147,7 @@ fun sendBuyingNotification(context: Context, userName: String) {
         .build()
 
     val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    manager.notify(2, notification)
+    manager.notify(BUYING_NOTIFICATION_ID, notification)
 }
 
 fun getLocalizedNamePart(context: Context, userName: String): String {

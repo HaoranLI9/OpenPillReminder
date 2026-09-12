@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.anshireminder.app.data.PillLogRepository
 import io.github.anshireminder.app.model.PillLog
+import io.github.anshireminder.app.worker.ReminderScheduler
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -24,6 +25,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun saveLog(log: PillLog) {
         viewModelScope.launch {
             repository.saveLog(log)
+
+            // Logging a pill should stop a strong reminder nag immediately
+            // instead of waiting for the next attempt to find it unneeded.
+            if (log.taken) {
+                ReminderScheduler.cancelRepeatAlarm(getApplication())
+            }
         }
     }
 }

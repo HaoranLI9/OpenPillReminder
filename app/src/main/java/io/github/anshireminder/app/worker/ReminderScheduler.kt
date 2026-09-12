@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import io.github.anshireminder.app.MainActivity
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -11,6 +12,8 @@ import java.time.LocalTime
 import java.time.ZoneId
 
 object ReminderScheduler {
+
+    private const val TAG = "AnshiReminder"
 
     const val EXTRA_REPEAT_INDEX = "REPEAT_INDEX"
 
@@ -46,9 +49,9 @@ object ReminderScheduler {
 
         val triggerTimeMillis = next.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
-        // Drop any leftover nag from the previous cycle before scheduling.
-        cancelRepeatAlarm(context)
-
+        // Deliberately does not touch a pending nag: this also runs whenever the
+        // settings are written, and cancelling here would silently kill a nag
+        // that is already under way.
         setAlarm(
             context = context,
             alarmManager = alarmManager,
@@ -77,6 +80,7 @@ object ReminderScheduler {
             pendingIntent = pillAlarmPendingIntent(context, repeatIndex),
             asAlarmClock = false,
         )
+        Log.i(TAG, "repeat $repeatIndex scheduled for $triggerTimeMillis")
     }
 
     private fun setAlarm(
@@ -112,6 +116,7 @@ object ReminderScheduler {
         } catch (e: SecurityException) {
             // Exact alarms need "Alarms & reminders" access. Rather than drop
             // the reminder entirely, fall back to an inexact alarm.
+            Log.w(TAG, "exact alarm denied, falling back to inexact", e)
             alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent)
         }
     }
