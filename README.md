@@ -4,7 +4,7 @@
   <h1>Anshi / 安时</h1>
 
   ![License](https://img.shields.io/badge/license-GPL--3.0--only-blue)
-  ![Minimum SDK](https://img.shields.io/badge/Minimum%20SDK-26%20(Android%208)-839192?logo=android&logoColor=white)
+  ![Minimum SDK](https://img.shields.io/badge/Minimum%20SDK-35%20(Android%2015)-839192?logo=android&logoColor=white)
   ![Target SDK](https://img.shields.io/badge/Target%20SDK-37%20(Android%2017)-566573?logo=android&logoColor=white)
 
   <h3>简单、私密、完全离线的避孕药提醒</h3>
@@ -38,6 +38,7 @@ Anshi is a supportive reminder and personal record, not medical advice. Device s
 
 - Application ID: `io.github.anshireminder.app`
 - Current development version: `0.1.0` (`versionCode` 1)
+- Minimum supported version: Android 15 (API 35)
 - Source branch: [`dev/anshi`](https://github.com/HaoranLI9/OpenPillReminder/tree/dev/anshi)
 
 Build a debug APK with:

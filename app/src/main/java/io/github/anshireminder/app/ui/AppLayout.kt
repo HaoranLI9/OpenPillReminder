@@ -2,7 +2,6 @@ package io.github.anshireminder.app.ui
 
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -89,32 +88,28 @@ fun AppLayout(
         if (showPermissions) {
             settingsViewModel.markPermissionsRequested()
 
-            // Request POST_NOTIFICATIONS (Android 13+)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                val granted = ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
+            // Request POST_NOTIFICATIONS
+            val notificationsGranted = ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
 
-                if (!granted) {
-                    notificationPermissionLauncher.launch(
-                        android.Manifest.permission.POST_NOTIFICATIONS
-                    )
-                }
+            if (!notificationsGranted) {
+                notificationPermissionLauncher.launch(
+                    android.Manifest.permission.POST_NOTIFICATIONS
+                )
             }
 
-            // Request SCHEDULE_EXACT_ALARM (Android 12+)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val alarmManager =
-                    context.getSystemService(Context.ALARM_SERVICE) as android.app.AlarmManager
-                if (!alarmManager.canScheduleExactAlarms()) {
-                    val intent = android.content.Intent(
-                        android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-                    ).apply {
-                        data = android.net.Uri.fromParts("package", context.packageName, null)
-                    }
-                    exactAlarmPermissionLauncher.launch(intent)
+            // Request SCHEDULE_EXACT_ALARM
+            val alarmManager =
+                context.getSystemService(Context.ALARM_SERVICE) as android.app.AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                val intent = android.content.Intent(
+                    android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                ).apply {
+                    data = android.net.Uri.fromParts("package", context.packageName, null)
                 }
+                exactAlarmPermissionLauncher.launch(intent)
             }
         }
     }

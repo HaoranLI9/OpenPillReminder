@@ -6,7 +6,6 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.provider.Settings
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -285,15 +284,13 @@ fun SettingsScreen(
                 }
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                SettingsSwitchRow(
-                    label = stringResource(R.string.material_you),
-                    checked = settings.useDynamicColor,
-                    onCheckedChange = { onSettingsChange(settings.copy(useDynamicColor = it)) }
-                )
-            }
+            SettingsSwitchRow(
+                label = stringResource(R.string.material_you),
+                checked = settings.useDynamicColor,
+                onCheckedChange = { onSettingsChange(settings.copy(useDynamicColor = it)) }
+            )
 
-            if (!settings.useDynamicColor || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            if (!settings.useDynamicColor) {
                 Text(stringResource(R.string.accent_color), style = MaterialTheme.typography.bodyMedium)
                 val colorOptions = listOf(0xFF6750A4, 0xFF006A60, 0xFF984061, 0xFF3D662F, 0xFF005FAF)
                 Row(
@@ -828,23 +825,14 @@ fun PermissionWarnings(modifier: Modifier = Modifier) {
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                hasNotificationPermission =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        ContextCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.POST_NOTIFICATIONS
-                        ) == PackageManager.PERMISSION_GRANTED
-                    } else {
-                        true
-                    }
+                hasNotificationPermission = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
 
-                hasExactAlarmPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    val alarmManager =
-                        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    alarmManager.canScheduleExactAlarms()
-                } else {
-                    true
-                }
+                val alarmManager =
+                    context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                hasExactAlarmPermission = alarmManager.canScheduleExactAlarms()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -873,12 +861,10 @@ fun PermissionWarnings(modifier: Modifier = Modifier) {
                 text = stringResource(R.string.exact_alarms_disabled),
                 buttonText = stringResource(R.string.fix),
                 onClick = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                            data = Uri.fromParts("package", context.packageName, null)
-                        }
-                        context.startActivity(intent)
+                    val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                        data = Uri.fromParts("package", context.packageName, null)
                     }
+                    context.startActivity(intent)
                 }
             )
         }
