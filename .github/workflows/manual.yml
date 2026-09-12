@@ -34,17 +34,17 @@ jobs:
           ./gradlew assembleRelease
           
           # Move and rename for easier artifact identification
-          mv app/build/outputs/apk/release/app-release.apk OpenPillReminder-testing.apk
+          mv app/build/outputs/apk/release/app-release.apk Anshi-testing.apk
           
           # Generate hash for verification logs
-          sha256=$(sha256sum OpenPillReminder-testing.apk | awk '{ print $1 }')
+          sha256=$(sha256sum Anshi-testing.apk | awk '{ print $1 }')
           echo "SHA-256 Hash: $sha256"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: OpenPillReminder-Testing-Build
-          path: OpenPillReminder-testing.apk
+          name: Anshi-Testing-Build
+          path: Anshi-testing.apk
           if-no-files-found: error
           retention-days: 3
 

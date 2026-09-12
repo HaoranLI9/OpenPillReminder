@@ -41,13 +41,13 @@ jobs:
 
       - name: Rename and Cleanup APK
         run: |
-          mv app/build/outputs/apk/release/app-release.apk OpenPillReminder-${{ github.event.inputs.tag_name }}.apk
+          mv app/build/outputs/apk/release/app-release.apk Anshi-${{ github.event.inputs.tag_name }}.apk
           rm release.jks
 
       - name: Generate APK Hash
         id: generate_hash
         run: |
-          sha256=$(sha256sum OpenPillReminder-${{ github.event.inputs.tag_name }}.apk | awk '{ print $1 }')
+          sha256=$(sha256sum Anshi-${{ github.event.inputs.tag_name }}.apk | awk '{ print $1 }')
           echo "apk_sha=$sha256" >> $GITHUB_OUTPUT
           echo "SHA-256 Hash of APK: $sha256"
 
@@ -57,7 +57,7 @@ jobs:
           tag_name: ${{ github.event.inputs.tag_name }}
           name: ${{ github.event.inputs.release_name }}
           draft: true
-          files: OpenPillReminder-${{ github.event.inputs.tag_name }}.apk
+          files: Anshi-${{ github.event.inputs.tag_name }}.apk
           body: |
             <!-- Write changelog here -->
             
