@@ -35,6 +35,64 @@ Anshi supports Simplified Chinese and English. It provides configurable pill sch
 
 Anshi is a supportive reminder and personal record, not medical advice. Device settings or third-party applications may interfere with notifications, so the app should not be the only reminder method you rely on.
 
+## 下载与安装
+
+需要 **Android 15 或更高版本**（API 35）。更早的系统无法安装。
+
+最新版本：[GitHub Releases](https://github.com/HaoranLI9/OpenPillReminder/releases/latest)
+
+### 方式一：直接下载 APK
+
+在 Releases 页面下载 `Anshi-v*.apk`，用手机打开即可安装。系统会提示"未知来源应用"，
+需要在弹出的设置里允许你的浏览器或文件管理器安装应用。安装包已用发布密钥签名，
+与这里公布的 SHA-256 校验值一致。
+
+这种方式适合装一次就够用的情况。想省事的话推荐用下面的方式二。
+
+### 方式二：用 Obtainium 自动更新（推荐）
+
+[Obtainium](https://github.com/ImranR98/Obtainium) 是一个开源的 Android 应用更新器，
+它直接从 GitHub Releases 读取安装包，因此不需要应用商店，也不经过任何中间方。
+
+1. 先装 Obtainium 本身（从它的 Releases 页面下载 APK）
+2. 打开 Obtainium，点添加应用
+3. 粘贴本仓库地址：`https://github.com/HaoranLI9/OpenPillReminder`
+4. 保存后即可安装，之后有新版本会自动提示并更新
+
+装完这一步，你就不用再手动找安装包了。
+
+### 关于应用商店
+
+安时没有上架 Google Play。开源应用商店的收录进度会在这里更新。
+
+## Download & Install
+
+Requires **Android 15 or later** (API 35). Earlier versions cannot install it.
+
+Latest release: [GitHub Releases](https://github.com/HaoranLI9/OpenPillReminder/releases/latest)
+
+### Option 1: Download the APK
+
+Grab `Anshi-v*.apk` from the Releases page and open it on your phone. Android will ask
+about installing from an unknown source — allow it for the browser or file manager you
+used. The APK is signed with the release key and matches the published SHA-256 checksum.
+
+This works well if you only need to install once.
+
+### Option 2: Automatic updates with Obtainium (recommended)
+
+[Obtainium](https://github.com/ImranR98/Obtainium) is an open-source Android app updater
+that reads installers straight from GitHub Releases. No store, no middleman.
+
+1. Install Obtainium itself (APK from its Releases page)
+2. Open Obtainium and add an app
+3. Paste this repository: `https://github.com/HaoranLI9/OpenPillReminder`
+4. Save, install, and future versions will be offered automatically
+
+### Stores
+
+Anshi is not on Google Play. Listing progress for open-source stores will be noted here.
+
 ## Development
 
 - Application ID: `io.github.anshireminder.app`
