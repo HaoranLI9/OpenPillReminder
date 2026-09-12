@@ -1,4 +1,0 @@
-- feat: added localization support in (#19)
-- fix: broken monochrome icon
-- feat: the app has been translated to Spanish, Catalan and Japanese
-- chore: disabled library stripping for RB

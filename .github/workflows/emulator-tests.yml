@@ -1,0 +1,65 @@
+name: Emulator Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev/anshi
+
+jobs:
+  instrumented-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      # Required so the emulator can use hardware acceleration on the runner.
+      - name: Enable KVM group permissions
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run instrumented tests on Android 15
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          # AOSP image rather than google_apis, so the device stays rootable.
+          target: default
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          # The tests grant their own special app access, so nothing here needs
+          # the app installed first.
+          script: |
+            ./gradlew connectedDebugAndroidTest --stacktrace
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: instrumented-test-reports
+          path: |
+            app/build/reports/androidTests/
+            app/build/outputs/androidTest-results/
+          if-no-files-found: warn
+          retention-days: 7
+
+      # Surfaces failures in the log tail so they can be read without
+      # downloading the artifact.
+      - name: Summarise failures
+        if: failure()
+        run: |
+          find app/build/outputs/androidTest-results -name 'TEST-*.xml' -print \
+            -exec sed -n '1,200p' {} \; || true

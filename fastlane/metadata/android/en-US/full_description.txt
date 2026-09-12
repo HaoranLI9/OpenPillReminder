@@ -1,14 +1,17 @@
-OpenPillReminder is a simple and reliable way to stay on track with your birth control routine. Setup takes just a moment; select the type of pill pack you use (number of pills) and choose the time you usually take your pill. From there, Open Pill Reminder will send you discreet notifications so you never miss a dose. You can also easily view the status of your current pack at any time.
+Anshi is a simple, open-source Android reminder for birth-control pill routines. Choose your pill-pack schedule and preferred reminder time, then use discreet notifications and a clear local history to stay organized.
 
-OpenPillReminder helps you manage your birth control routine with ease—simply, effectively, and for free (no ads either).
+Your routine stays under your control. Reminders can be paused at any time, and you decide when the next cycle begins.
 
 Features:
 
-- Daily reminders so you don’t forget your pill
-- Automatic pause of reminders on days when no pill is required
-- Notifications instead of intrusive alarms
-- Alerts when it’s time to start a new pack or purchase more pills
-- Customizable pack size to support all types of birth control pills
-- Clear display of your current pack status
+- Configurable active-pill and break-day schedules
+- Reminder pause and resume controls
+- Optional placebo and refill reminders
+- Local pill history and notes
+- Local backup and restore
+- Simplified Chinese and English
+- No account, ads, analytics, or tracking
 
-Note: Certain device settings or third-party apps may interfere with notifications. OpenPillReminder should be used as a supportive tool and not as your sole reminder system. We are not responsible for missed pills due to notification issues.
+All settings and records remain on your device.
+
+Anshi is a supportive reminder and personal record, not medical advice. Device settings or third-party applications may interfere with notifications, so the app should not be the only reminder method you rely on.

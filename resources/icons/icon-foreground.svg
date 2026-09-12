@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Anshi adaptive foreground, Copyright 2026 lmoon, GPL-3.0-only -->
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="154" fill="#F8FAF9"/>
+  <circle cx="256" cy="256" r="132" fill="none" stroke="#BFE4DE" stroke-width="8"/>
+  <path d="M256 166V256L320 296" fill="none" stroke="#0F766E" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="rotate(-35 350 354)">
+    <rect x="270" y="320" width="160" height="68" rx="34" fill="#FFF1EF" stroke="#F8FAF9" stroke-width="10"/>
+    <path d="M350 320H396A34 34 0 0 1 430 354A34 34 0 0 1 396 388H350Z" fill="#F26B5E"/>
+    <path d="M350 326V382" stroke="#E25549" stroke-width="6"/>
+  </g>
+</svg>

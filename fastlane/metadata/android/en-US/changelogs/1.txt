@@ -1,1 +1,5 @@
-App Release
+Initial Anshi development release.
+
+- Added Simplified Chinese support
+- Added explicit reminder pause and resume controls
+- Established independent Anshi branding and package identity

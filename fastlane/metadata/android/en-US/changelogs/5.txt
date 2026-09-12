@@ -1,1 +1,0 @@
-- feat: New privacy settings with the option to prevent screenshots

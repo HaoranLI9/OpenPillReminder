@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.mariinkys.openPillReminder"
+    namespace = "io.github.anshireminder.app"
 
     //https://developer.android.com/tools/releases/build-tools
     buildToolsVersion = "37.0.0"
@@ -14,11 +14,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.mariinkys.OpenPillReminder"
-        minSdk = 26
+        applicationId = "io.github.anshireminder.app"
+        minSdk = 35
         targetSdk = 37
-        versionCode = 7
-        versionName = "1.0.6"
+        versionCode = 1
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -61,9 +61,8 @@ android {
     }
 
     dependenciesInfo {
-        // Disables dependency metadata when building APKs (for IzzyOnDroid/F-Droid)
+        // Keep dependency metadata out of distributed artifacts
         includeInApk = false
-        // Disables dependency metadata when building Android App Bundles (for Google Play)
         includeInBundle = false
     }
 }
@@ -87,6 +86,8 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.rules)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 }

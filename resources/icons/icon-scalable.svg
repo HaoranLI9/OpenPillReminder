@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Anshi icon, Copyright 2026 lmoon, GPL-3.0-only -->
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="96" fill="#FBD0D7"></rect>
-  <g transform="rotate(-25 256 256)">
-    <rect x="136" y="196" width="240" height="120" rx="60" fill="#FFFFFF"></rect>
-    <line x1="256" y1="196" x2="256" y2="316" stroke="#F3AAB5" stroke-width="6"></line>
-    <path d="M256 196 h60 a60 60 0 0 1 0 120 h-60 z" fill="#F7A8B8"></path>
+  <rect width="512" height="512" rx="96" fill="#0F766E"/>
+  <circle cx="256" cy="256" r="154" fill="#F8FAF9"/>
+  <circle cx="256" cy="256" r="132" fill="none" stroke="#BFE4DE" stroke-width="8"/>
+  <path d="M256 166V256L320 296" fill="none" stroke="#0F766E" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="rotate(-35 350 354)">
+    <rect x="270" y="320" width="160" height="68" rx="34" fill="#FFF1EF" stroke="#F8FAF9" stroke-width="10"/>
+    <path d="M350 320H396A34 34 0 0 1 430 354A34 34 0 0 1 396 388H350Z" fill="#F26B5E"/>
+    <path d="M350 326V382" stroke="#E25549" stroke-width="6"/>
   </g>
-  <circle cx="360" cy="140" r="16" fill="#FF6B81"></circle>
 </svg>

@@ -1,20 +1,26 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">OpenPillReminder</string>
+    <string name="app_name">Anshi</string>
 
     <string name="home">Home</string>
     <string name="settings">Settings</string>
+    <string name="pill_guide">Pill guide</string>
     <string name="welcome">Welcome</string>
     <string name="welcome_user">Welcome, %1$s</string>
 
     <!-- NOTIFICATIONS -->
     <string name="channel_name">Pill Reminders</string>
     <string name="channel_description">Daily pill reminder notifications</string>
+    <string name="channel_name_strong">Strong pill reminders</string>
+    <string name="channel_description_strong">Alarm-style reminders that keep repeating until the pill is logged</string>
     <string name="notif_pill_title">Pill Reminder</string>
     <string name="notif_placebo_title">Placebo Reminder</string>
     <string name="notif_pill_msg">Time to take your pill%1$s!</string>
     <string name="notif_placebo_msg">Time to take your placebo pill%1$s!</string>
     <string name="notif_buy_title">Refill Reminder</string>
     <string name="notif_buy_msg">Time to buy your next pack%1$s!</string>
+    <string name="action_take_before_bed">Take before bed</string>
+    <string name="notif_postponed_title">Reminder postponed</string>
+    <string name="notif_postponed_msg">You will be reminded again at %1$s.</string>
 
     <!-- HOME SCREEN -->
     <string name="date_range">%1$s - %2$s</string>
@@ -42,6 +48,9 @@
     <string name="pill_reminder_enabled">Enable pill reminders</string>
     <string name="pill_reminder_enabled_desc">Reminders are active for the current pill schedule.</string>
     <string name="pill_reminder_paused_desc">Paused. Choose the next first-pill date, then enable this when you are ready.</string>
+    <string name="strong_reminder">Strong reminders</string>
+    <string name="strong_reminder_desc">Repeats every few minutes until you log the pill, and takes over the screen when you allow it.</string>
+    <string name="strong_reminder_paused_desc">Available after pill reminders are enabled.</string>
     <string name="active_pills">Active Pills</string>
     <string name="break_days">Break Days</string>
     <string name="placebo_label">Placebo Pills on Break Days</string>
@@ -83,18 +92,49 @@
     <string name="select">Select</string>
     <string name="pick_color">Pick a Color</string>
     <string name="ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="first_dose_time_passed_title">Today\'s first pill is still unlogged</string>
+    <string name="first_dose_time_passed_message">Your reminder time of %1$s has already passed. Anshi will next remind you tomorrow at %1$s. If you have already taken it, mark today as taken on the Home screen.</string>
     <string name="custom_color">Custom Color</string>
 
     <!-- About -->
-    <string name="author">Author</string>
-    <string name="repository">View Repository</string>
-    <string name="issues">Report an Issue/Suggestion</string>
-    <string name="license">License Info (GPL-3.0)</string>
-    <string name="support">Support the Project ❤️</string>
+    <string name="about_original_author">Based on OpenPillReminder by Alex Marín</string>
+    <string name="about_adapted_by">Adapted by lmoon</string>
+    <string name="license">License: GPL-3.0-only</string>
 
     <!-- Permissions Banners -->
     <string name="notifications_disabled">Notifications are disabled. The app won\'t be able to remind you.</string>
     <string name="exact_alarms_disabled">Exact alarms are disabled. Reminders might not fire on time.</string>
     <string name="enable">Enable</string>
     <string name="fix">Fix</string>
+    <string name="grant">Grant</string>
+    <string name="full_screen_intent_disabled">Anshi is not allowed to show full-screen alerts. Strong reminders stay as ordinary notifications until you grant it.</string>
+    <string name="dnd_access_disabled">Do Not Disturb access is off, so Do Not Disturb can silence strong reminders.</string>
+
+    <!-- 21+7 PILL GUIDE -->
+    <string name="guide_scope_title">For standard monophasic 21+7 pills only</string>
+    <string name="guide_scope_body">Use this guide only when all 21 active pills contain the same hormone dose, followed by a 7-day pill-free break. Do not use it for multiphasic, progestogen-only, 24+4, 26+2, continuous or emergency contraception.</string>
+    <string name="guide_quick_help">I missed a pill</string>
+    <string name="guide_how_late">How long since the first missed pill was due?</string>
+    <string name="guide_under_48">Under 48 hours</string>
+    <string name="guide_over_48">48 hours or more</string>
+    <string name="guide_which_week">Where are you in the pack?</string>
+    <string name="guide_week_1">Days 1–7</string>
+    <string name="guide_week_2">Days 8–14</string>
+    <string name="guide_week_3">Days 15–21</string>
+    <string name="guide_under_48_title">Take the missed pill now</string>
+    <string name="guide_under_48_action">Take the late or missed pill as soon as possible, then take the remaining pills at the usual time. Taking two pills on the same day is allowed. Extra contraception is generally not needed.</string>
+    <string name="guide_over_48_title">Take the most recent missed pill now</string>
+    <string name="guide_week_1_action">Discard any earlier missed pills and continue the pack at the usual time. Avoid sex or use condoms until you have taken active pills correctly for 7 consecutive days. If you had unprotected sex in the previous 5 days, seek prompt advice about emergency contraception.</string>
+    <string name="guide_week_2_action">Discard any earlier missed pills and continue the pack at the usual time. Avoid sex or use condoms until you have taken active pills correctly for 7 consecutive days. Emergency contraception is usually unnecessary if the previous 7 pills were taken correctly.</string>
+    <string name="guide_week_3_action">Discard any earlier missed pills and finish the active pills in this pack. Skip the 7-day break and start a new pack the next day. Avoid sex or use condoms until you have taken active pills correctly for 7 consecutive days.</string>
+    <string name="guide_more_answers">More answers</string>
+    <string name="guide_start_question">When does protection begin after starting for the first time?</string>
+    <string name="guide_start_answer">As a cautious app rule, avoid sex or use condoms until you have taken active pills correctly for 7 consecutive days. If pregnancy cannot be excluded or you had unprotected sex before starting, speak to a clinician or pharmacist.</string>
+    <string name="guide_late_pack_question">What if I start the next pack late?</string>
+    <string name="guide_late_pack_answer">Start the new pack as soon as possible and treat it like missed pills in week 1. Avoid sex or use condoms until you have taken active pills correctly for 7 consecutive days. Seek prompt advice if you had unprotected sex in the previous 5 days.</string>
+    <string name="guide_sickness_question">What if I vomit or have severe diarrhoea?</string>
+    <string name="guide_sickness_answer">If it lasts under 48 hours, keep taking pills at the usual time; extra contraception is generally not needed. At 48 hours or more, follow the missed-pill rules. After recovery, use condoms until active pills have been taken correctly for 7 consecutive days. If this happens on days 15–21, skip the break and start a new pack.</string>
+    <string name="guide_notice_title">Medical information notice</string>
+    <string name="guide_notice_body">This guide provides general information and does not replace your medicine leaflet or advice from a clinician or pharmacist. Different brands and regimens may have different instructions. Seek professional advice if you are unsure about your pill, pregnancy is possible, or emergency contraception may be needed. Combined pills do not protect against sexually transmitted infections.</string>
+    <string name="guide_sources">Based on CDC U.S. Selected Practice Recommendations for Contraceptive Use (2024) and NHS combined-pill guidance (reviewed 2024).</string>
 </resources>
