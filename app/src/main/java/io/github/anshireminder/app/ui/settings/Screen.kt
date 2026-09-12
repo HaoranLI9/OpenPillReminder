@@ -373,15 +373,10 @@ fun SettingsScreen(
         SettingsSection(title = stringResource(R.string.section_about)) {
 
             // Upstream author
-            TextButton(
+            AboutLinkRow(
+                text = stringResource(R.string.about_original_author),
                 onClick = { uriHandler.openUri(UPSTREAM_AUTHOR_URL) },
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-                    Text(stringResource(R.string.about_original_author), style = MaterialTheme.typography.bodyLarge)
-                }
-            }
+            )
 
             // Fork attribution
             Text(
@@ -392,15 +387,10 @@ fun SettingsScreen(
             )
 
             // License notice
-            TextButton(
+            AboutLinkRow(
+                text = stringResource(R.string.license),
                 onClick = { uriHandler.openUri(GNU_LICENSE_URL) },
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-                    Text(stringResource(R.string.license), style = MaterialTheme.typography.bodyLarge)
-                }
-            }
+            )
 
         }
 
@@ -500,6 +490,24 @@ fun SettingsScreen(
         ) {
             DatePicker(state = datePickerState)
         }
+    }
+}
+
+@Composable
+private fun AboutLinkRow(text: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
     }
 }
 
