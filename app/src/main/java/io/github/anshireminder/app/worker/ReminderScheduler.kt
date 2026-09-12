@@ -100,11 +100,27 @@ object ReminderScheduler {
      * its usual time.
      */
     fun scheduleBedtimeReminder(context: Context, strongReminder: Boolean) {
+        val date = LocalDate.now()
+        scheduleBedtimeReminder(
+            context = context,
+            strongReminder = strongReminder,
+            start = ReminderTiming.bedtimeStart(date),
+            deadline = ReminderTiming.bedtimeDeadline(date),
+        )
+    }
+
+    /**
+     * The window is a parameter so instrumented tests can exercise the chain
+     * with a short span instead of waiting for the real 23:30.
+     */
+    fun scheduleBedtimeReminder(
+        context: Context,
+        strongReminder: Boolean,
+        start: LocalDateTime,
+        deadline: LocalDateTime,
+    ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val now = LocalDateTime.now()
-        val date = now.toLocalDate()
-        val start = ReminderTiming.bedtimeStart(date)
-        val deadline = ReminderTiming.bedtimeDeadline(date)
 
         // Tapping the action after bedtime has already begun fires straight away.
         val trigger = if (start.isAfter(now)) start else now.plusSeconds(1)
