@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.AlertDialog
@@ -33,6 +34,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.anshireminder.app.ui.home.HomeScreen
 import io.github.anshireminder.app.ui.home.HomeViewModel
+import io.github.anshireminder.app.ui.guide.PillGuideScreen
 import io.github.anshireminder.app.ui.settings.SettingsScreen
 import io.github.anshireminder.app.ui.settings.SettingsViewModel
 import io.github.anshireminder.app.R
@@ -125,6 +127,7 @@ fun AppLayout(
     var selectedTab by remember { mutableIntStateOf(0) }
     val tabs = listOf(
         Pair(stringResource(R.string.home), Icons.Default.Home),
+        Pair(stringResource(R.string.pill_guide), Icons.Default.Info),
         Pair(stringResource(R.string.settings), Icons.Default.Settings)
     )
 
@@ -170,14 +173,14 @@ fun AppLayout(
             TopAppBar(
                 title = {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        val topBarTitle = if (selectedTab == 0) {
-                            if (settings.userName.isNotBlank()) {
+                        val topBarTitle = when (selectedTab) {
+                            0 -> if (settings.userName.isNotBlank()) {
                                 stringResource(R.string.welcome_user, settings.userName)
                             } else {
                                 stringResource(R.string.welcome)
                             }
-                        } else {
-                            stringResource(R.string.settings)
+                            1 -> stringResource(R.string.pill_guide)
+                            else -> stringResource(R.string.settings)
                         }
 
                         Text(topBarTitle)
@@ -206,7 +209,8 @@ fun AppLayout(
                 viewModel = homeViewModel,
                 notificationEvents = notificationEvents,
             )
-            1 -> SettingsScreen(
+            1 -> PillGuideScreen(modifier = Modifier.padding(innerPadding))
+            2 -> SettingsScreen(
                 settings = settings,
                 onSettingsChange = { settingsViewModel.updateSettings(it) },
                 backupState = backupState,

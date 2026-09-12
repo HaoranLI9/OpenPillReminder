@@ -3,6 +3,7 @@
 
     <string name="home">首页</string>
     <string name="settings">设置</string>
+    <string name="pill_guide">用药指南</string>
     <string name="welcome">欢迎</string>
     <string name="welcome_user">欢迎，%1$s</string>
 
@@ -105,4 +106,32 @@
     <string name="grant">去授权</string>
     <string name="full_screen_intent_disabled">安时尚未获得全屏提醒权限。授权之前，强提醒只会以普通通知显示。</string>
     <string name="dnd_access_disabled">尚未获得勿扰模式访问权限，强提醒可能被勿扰模式静音。</string>
+
+    <!-- 21+7 用药指南 -->
+    <string name="guide_scope_title">仅适用于标准单相 21+7 避孕药</string>
+    <string name="guide_scope_body">仅当每板 21 片有效药的激素剂量相同，随后停药 7 天时使用本指南。不适用于多相药、孕激素单方药、24+4、26+2、连续服药方案或紧急避孕药。</string>
+    <string name="guide_quick_help">我漏服了</string>
+    <string name="guide_how_late">从第一片漏服药原定服用时间算起，过去了多久？</string>
+    <string name="guide_under_48">未满 48 小时</string>
+    <string name="guide_over_48">已满 48 小时</string>
+    <string name="guide_which_week">目前处于这板药的哪一段？</string>
+    <string name="guide_week_1">第 1–7 天</string>
+    <string name="guide_week_2">第 8–14 天</string>
+    <string name="guide_week_3">第 15–21 天</string>
+    <string name="guide_under_48_title">现在补服漏掉的药片</string>
+    <string name="guide_under_48_action">想起来后尽快补服，剩余药片仍按原定时间服用。同一天服用 2 片是允许的。通常不需要额外避孕。</string>
+    <string name="guide_over_48_title">现在只补最近漏服的一片</string>
+    <string name="guide_week_1_action">更早漏服的药片不要再补，之后按原定时间继续服药。在重新连续正确服用有效药满 7 天前，避免性生活或使用安全套。最近 5 天内有无保护性生活时，请尽快咨询是否需要紧急避孕。</string>
+    <string name="guide_week_2_action">更早漏服的药片不要再补，之后按原定时间继续服药。在重新连续正确服用有效药满 7 天前，避免性生活或使用安全套。此前 7 片均正确服用时，通常不需要紧急避孕。</string>
+    <string name="guide_week_3_action">更早漏服的药片不要再补，继续吃完当前药板的有效药。跳过 7 天停药期，第二天直接开始新药板。在重新连续正确服用有效药满 7 天前，避免性生活或使用安全套。</string>
+    <string name="guide_more_answers">其他常见问题</string>
+    <string name="guide_start_question">第一次开始服药，什么时候产生避孕保护？</string>
+    <string name="guide_start_answer">本应用采用谨慎规则：在连续正确服用有效药满 7 天前，避免性生活或使用安全套。无法排除怀孕，或开始服药前有无保护性生活时，请咨询医生或药师。</string>
+    <string name="guide_late_pack_question">停药 7 天后，下一板开始晚了怎么办？</string>
+    <string name="guide_late_pack_answer">尽快开始新药板，并按照第 1 周漏服处理。在连续正确服用有效药满 7 天前，避免性生活或使用安全套。最近 5 天内有无保护性生活时，请尽快咨询专业人员。</string>
+    <string name="guide_sickness_question">呕吐或严重腹泻怎么办？</string>
+    <string name="guide_sickness_answer">持续未满 48 小时时，继续按时服药，通常不需要额外避孕。达到 48 小时后，按照漏服处理。症状结束后，使用安全套直至连续正确服用有效药满 7 天。若发生在第 15–21 天，应跳过停药期并直接开始下一板。</string>
+    <string name="guide_notice_title">医疗信息声明</string>
+    <string name="guide_notice_body">本指南仅提供一般信息，不能替代药品说明书及医生或药师的个体化建议。不同品牌和方案的处理规则可能不同。无法确定药物类型、可能怀孕或可能需要紧急避孕时，请及时咨询专业人员。复方避孕药不能预防性传播感染。</string>
+    <string name="guide_sources">依据 CDC《美国避孕方法选择性实践建议（2024）》及 NHS 复方避孕药指南（2024 年复核）整理。</string>
 </resources>
