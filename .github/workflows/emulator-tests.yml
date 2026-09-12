@@ -55,3 +55,11 @@ jobs:
             app/build/outputs/androidTest-results/
           if-no-files-found: warn
           retention-days: 7
+
+      # Surfaces failures in the log tail so they can be read without
+      # downloading the artifact.
+      - name: Summarise failures
+        if: failure()
+        run: |
+          find app/build/outputs/androidTest-results -name 'TEST-*.xml' -print \
+            -exec sed -n '1,200p' {} \; || true

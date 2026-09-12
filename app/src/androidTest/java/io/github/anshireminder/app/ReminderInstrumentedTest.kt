@@ -65,6 +65,13 @@ class ReminderInstrumentedTest {
     private fun activePillNotification(id: Int) =
         notificationManager.activeNotifications.firstOrNull { it.id == id }
 
+    /**
+     * The notification is handed to the system service asynchronously, so an
+     * immediate read can miss it. Poll instead of asserting straight away.
+     */
+    private fun awaitPillNotification(id: Int, timeoutMillis: Long = 10_000) =
+        waitFor(timeoutMillis) { activePillNotification(id) != null }
+
     @Test
     fun strongReminderCarriesTheBedtimeAction() {
         sendPillNotification(
@@ -77,8 +84,8 @@ class ReminderInstrumentedTest {
             allowPostpone = true,
         )
 
+        assertTrue("strong reminder was not posted", awaitPillNotification(100 + 1))
         val posted = activePillNotification(100 + 1)
-        assertTrue("strong reminder was not posted", posted != null)
         assertEquals(STRONG_CHANNEL_ID, posted!!.notification.channelId)
         assertEquals("bedtime action missing", 1, posted.notification.actions?.size ?: 0)
         assertEquals(
@@ -99,8 +106,8 @@ class ReminderInstrumentedTest {
             allowPostpone = false,
         )
 
+        assertTrue("reminder was not posted", awaitPillNotification(100 + 1))
         val posted = activePillNotification(100 + 1)
-        assertTrue("reminder was not posted", posted != null)
         assertEquals(
             "the postponed reminder should not offer the action again",
             0,
@@ -166,8 +173,10 @@ class ReminderInstrumentedTest {
             deadline = LocalDateTime.now().plusSeconds(25),
         )
 
-        val fired = waitFor(90_000) { activePillNotification(100 + 1) != null }
-        assertTrue("the bedtime reminder never fired", fired)
+        assertTrue(
+            "the bedtime reminder never fired",
+            awaitPillNotification(100 + 1, timeoutMillis = 90_000),
+        )
 
         // Give a would-be repeat a moment to be logged.
         Thread.sleep(2_000)
@@ -175,6 +184,19 @@ class ReminderInstrumentedTest {
         assertTrue(
             "a nag was queued past the bedtime deadline:\n$logs",
             !logs.contains(Regex("repeat \\d+ scheduled")),
+        )
+
+        // Postponing exists to rescue today, so tomorrow's schedule must survive
+        // it untouched. The daily alarm was set six hours out before the test.
+        val next = alarmManager.nextAlarmClock
+        assertTrue(
+            "the daily reminder is no longer scheduled after a postponement",
+            next != null,
+        )
+        val hoursAway = (next!!.triggerTime - System.currentTimeMillis()) / 3_600_000.0
+        assertTrue(
+            "the daily reminder moved: next alarm is $hoursAway hours away",
+            hoursAway in 5.0..7.0,
         )
     }
 
