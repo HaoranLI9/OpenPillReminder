@@ -21,6 +21,7 @@
 - 记录已服用药片和备注
 - 提醒开始新药盒或补充药品
 - 支持自定义有效药片和停药天数
+- 提供标准单相 21+7 复方短效避孕药的漏服处理指南
 - 本地备份与恢复
 - 支持简体中文和英文
 
@@ -30,7 +31,7 @@
 
 Anshi is an open-source Android reminder for birth-control pill routines, designed primarily for Chinese-speaking users. Settings and pill records remain on the device. The app has no accounts, ads, analytics, or tracking.
 
-Anshi supports Simplified Chinese and English. It provides configurable pill schedules, pause and resume controls, local history, refill reminders, and local backup and restore.
+Anshi supports Simplified Chinese and English. It provides configurable pill schedules, pause and resume controls, local history, refill reminders, a missed-pill guide for standard monophasic 21+7 combined pills, and local backup and restore.
 
 Anshi is a supportive reminder and personal record, not medical advice. Device settings or third-party applications may interfere with notifications, so the app should not be the only reminder method you rely on.
 
@@ -39,7 +40,7 @@ Anshi is a supportive reminder and personal record, not medical advice. Device s
 - Application ID: `io.github.anshireminder.app`
 - Current development version: `0.1.0` (`versionCode` 1)
 - Minimum supported version: Android 15 (API 35)
-- Source branch: [`dev/anshi`](https://github.com/HaoranLI9/OpenPillReminder/tree/dev/anshi)
+- Source branch: [`main`](https://github.com/HaoranLI9/OpenPillReminder/tree/main)
 
 Build a debug APK with:
 

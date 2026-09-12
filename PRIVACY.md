@@ -10,7 +10,7 @@
 
 应用需要通知、精确闹钟和开机启动权限，以便按照用户设置发送提醒。应用内的原作者主页和许可证链接会交由设备浏览器打开。
 
-源代码：https://github.com/HaoranLI9/OpenPillReminder/tree/dev/anshi
+源代码：https://github.com/HaoranLI9/OpenPillReminder/tree/main
 
 联系方式：通过上述仓库的 Issue 反馈。
 
@@ -24,6 +24,6 @@ When the user starts a backup, the app writes settings and pill records to a fil
 
 The app requests notification, exact-alarm, and boot-completed permissions to deliver reminders configured by the user. The upstream author page and license links in the app are opened by the device browser.
 
-Source code: https://github.com/HaoranLI9/OpenPillReminder/tree/dev/anshi
+Source code: https://github.com/HaoranLI9/OpenPillReminder/tree/main
 
 Contact: through the issue tracker of the repository above.
