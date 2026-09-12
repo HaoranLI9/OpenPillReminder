@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import io.github.anshireminder.app.MainActivity
+import io.github.anshireminder.app.model.ReminderTiming
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -17,16 +18,27 @@ object ReminderScheduler {
 
     const val EXTRA_REPEAT_INDEX = "REPEAT_INDEX"
 
+    /**
+     * Optional upper bound for a nag chain, as epoch millis. Used by the
+     * bedtime postponement so it cannot run into the next day.
+     */
+    const val EXTRA_DEADLINE = "CHAIN_DEADLINE"
+
     private const val ALARM_REQUEST_CODE = 1001
     private const val BUYING_ALARM_REQUEST_CODE = 1002
     private const val REPEAT_ALARM_REQUEST_CODE = 1003
     private const val SHOW_INTENT_REQUEST_CODE = 1004
+    private const val BEDTIME_ALARM_REQUEST_CODE = 1005
 
     /** How long a strong reminder waits before nagging again. */
     private const val REPEAT_INTERVAL_MINUTES = 5L
 
     /** Strong reminders stop nagging after this many extra attempts. */
     const val MAX_STRONG_REPEATS = 5
+
+    /** When the next nag would land, used to check it against a deadline. */
+    fun nextRepeatMoment(now: LocalDateTime): LocalDateTime =
+        now.plusMinutes(REPEAT_INTERVAL_MINUTES)
 
     fun schedulePillReminder(
         context: Context,
@@ -65,10 +77,9 @@ object ReminderScheduler {
      * Strong reminders re-fire while the pill is still unlogged. Each repeat
      * carries its index so the receiver knows how many attempts are left.
      */
-    fun scheduleRepeatPillReminder(context: Context, repeatIndex: Int) {
+    fun scheduleRepeatPillReminder(context: Context, repeatIndex: Int, deadlineMillis: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val triggerTimeMillis = LocalDateTime.now()
-            .plusMinutes(REPEAT_INTERVAL_MINUTES)
+        val triggerTimeMillis = nextRepeatMoment(LocalDateTime.now())
             .atZone(ZoneId.systemDefault())
             .toInstant()
             .toEpochMilli()
@@ -77,10 +88,44 @@ object ReminderScheduler {
             context = context,
             alarmManager = alarmManager,
             triggerTimeMillis = triggerTimeMillis,
-            pendingIntent = pillAlarmPendingIntent(context, repeatIndex),
+            pendingIntent = pillAlarmPendingIntent(context, repeatIndex, deadlineMillis),
             asAlarmClock = false,
         )
         Log.i(TAG, "repeat $repeatIndex scheduled for $triggerTimeMillis")
+    }
+
+    /**
+     * One-off reminder for the rest of today, used when the user postpones the
+     * dose to bedtime. The daily schedule is left untouched, so tomorrow keeps
+     * its usual time.
+     */
+    fun scheduleBedtimeReminder(context: Context, strongReminder: Boolean) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val now = LocalDateTime.now()
+        val date = now.toLocalDate()
+        val start = ReminderTiming.bedtimeStart(date)
+        val deadline = ReminderTiming.bedtimeDeadline(date)
+
+        // Tapping the action after bedtime has already begun fires straight away.
+        val trigger = if (start.isAfter(now)) start else now.plusSeconds(1)
+        val triggerTimeMillis = trigger.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val deadlineMillis = deadline.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        cancelRepeatAlarm(context)
+
+        setAlarm(
+            context = context,
+            alarmManager = alarmManager,
+            triggerTimeMillis = triggerTimeMillis,
+            pendingIntent = bedtimePendingIntent(context, deadlineMillis),
+            asAlarmClock = strongReminder,
+        )
+        Log.i(TAG, "bedtime reminder scheduled for $trigger")
+    }
+
+    fun cancelBedtimeAlarm(context: Context) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(bedtimePendingIntent(context, deadlineMillis = 0L))
     }
 
     private fun setAlarm(
@@ -121,9 +166,14 @@ object ReminderScheduler {
         }
     }
 
-    private fun pillAlarmPendingIntent(context: Context, repeatIndex: Int): PendingIntent {
+    private fun pillAlarmPendingIntent(
+        context: Context,
+        repeatIndex: Int,
+        deadlineMillis: Long = 0L,
+    ): PendingIntent {
         val intent = Intent(context, PillAlarmReceiver::class.java).apply {
             putExtra(EXTRA_REPEAT_INDEX, repeatIndex)
+            putExtra(EXTRA_DEADLINE, deadlineMillis)
         }
         return PendingIntent.getBroadcast(
             context,
@@ -133,8 +183,22 @@ object ReminderScheduler {
         )
     }
 
+    private fun bedtimePendingIntent(context: Context, deadlineMillis: Long): PendingIntent {
+        val intent = Intent(context, PillAlarmReceiver::class.java).apply {
+            putExtra(EXTRA_REPEAT_INDEX, 0)
+            putExtra(EXTRA_DEADLINE, deadlineMillis)
+        }
+        return PendingIntent.getBroadcast(
+            context,
+            BEDTIME_ALARM_REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
     fun cancelPillAlarm(context: Context) {
         cancelRepeatAlarm(context)
+        cancelBedtimeAlarm(context)
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(pillAlarmPendingIntent(context, repeatIndex = 0))

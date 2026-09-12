@@ -17,6 +17,9 @@
     <string name="notif_placebo_msg">Time to take your placebo pill%1$s!</string>
     <string name="notif_buy_title">Refill Reminder</string>
     <string name="notif_buy_msg">Time to buy your next pack%1$s!</string>
+    <string name="action_take_before_bed">Take before bed</string>
+    <string name="notif_postponed_title">Reminder postponed</string>
+    <string name="notif_postponed_msg">You will be reminded again at %1$s.</string>
 
     <!-- HOME SCREEN -->
     <string name="date_range">%1$s - %2$s</string>

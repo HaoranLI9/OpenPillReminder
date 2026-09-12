@@ -7,21 +7,43 @@ import android.util.Log
 import io.github.anshireminder.app.data.PillLogRepository
 import io.github.anshireminder.app.data.SettingsRepository
 import io.github.anshireminder.app.model.PillReminderPolicy
+import io.github.anshireminder.app.model.ReminderTiming
 import io.github.anshireminder.app.sendPillNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class PillAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val pendingResult = goAsync()
         val repeatIndex = intent.getIntExtra(ReminderScheduler.EXTRA_REPEAT_INDEX, 0)
+        val deadlineMillis = intent.getLongExtra(ReminderScheduler.EXTRA_DEADLINE, 0L)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val settings = SettingsRepository(context).settingsFlow.first()
+
+                // A postponed bedtime reminder has to stop at its deadline
+                // instead of nagging into the next day.
+                val deadline = if (deadlineMillis > 0L) {
+                    Instant.ofEpochMilli(deadlineMillis)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime()
+                } else {
+                    null
+                }
+                val now = LocalDateTime.now()
+
+                if (deadline != null && now.isAfter(deadline)) {
+                    Log.i(TAG, "attempt ${repeatIndex + 1} arrived past the bedtime deadline, dropping")
+                    ReminderScheduler.cancelRepeatAlarm(context)
+                    return@launch
+                }
 
                 val cycleLength = (settings.activePills + settings.breakDays).coerceAtLeast(1)
                 val today = LocalDate.now()
@@ -60,9 +82,17 @@ class PillAlarmReceiver : BroadcastReceiver() {
                             settings.strongReminderEnabled,
                             repeatIndex,
                             ReminderScheduler.MAX_STRONG_REPEATS,
+                        ) &&
+                        ReminderTiming.fitsBefore(
+                            ReminderScheduler.nextRepeatMoment(now),
+                            deadline,
                         )
                     ) {
-                        ReminderScheduler.scheduleRepeatPillReminder(context, repeatIndex + 1)
+                        ReminderScheduler.scheduleRepeatPillReminder(
+                            context,
+                            repeatIndex + 1,
+                            deadlineMillis,
+                        )
                     }
 
                     try {
@@ -73,6 +103,7 @@ class PillAlarmReceiver : BroadcastReceiver() {
                             today,
                             strong = settings.strongReminderEnabled,
                             attempt = repeatIndex + 1,
+                            allowPostpone = deadlineMillis == 0L,
                         )
                     } catch (e: Exception) {
                         Log.e(TAG, "failed to post reminder notification", e)

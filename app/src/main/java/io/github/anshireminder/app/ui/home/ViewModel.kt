@@ -30,6 +30,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             // instead of waiting for the next attempt to find it unneeded.
             if (log.taken) {
                 ReminderScheduler.cancelRepeatAlarm(getApplication())
+                ReminderScheduler.cancelBedtimeAlarm(getApplication())
             }
         }
     }

@@ -6,17 +6,26 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
+import io.github.anshireminder.app.worker.PostponeReminderReceiver
+import io.github.anshireminder.app.worker.ReminderScheduler
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 const val CHANNEL_ID = "pill_reminder_channel"
 const val STRONG_CHANNEL_ID = "pill_reminder_strong_channel"
 
 private const val PILL_NOTIFICATION_ID = 1
 private const val BUYING_NOTIFICATION_ID = 2
+private const val POSTPONED_NOTIFICATION_ID = 3
 
 // Strong attempts get their own ids so each one alerts again instead of quietly
 // updating the previous notification.
 private const val STRONG_NOTIFICATION_ID_BASE = 100
+
+private const val POSTPONE_REQUEST_CODE = 20
+
+private val bedtimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
 fun createNotificationChannel(context: Context) {
     val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -67,6 +76,7 @@ fun sendPillNotification(
     date: LocalDate,
     strong: Boolean = false,
     attempt: Int = 1,
+    allowPostpone: Boolean = true,
 ) {
     val title = context.getString(
         if (isBreakDay) R.string.notif_placebo_title else R.string.notif_pill_title
@@ -101,6 +111,15 @@ fun sendPillNotification(
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
 
+    // A reminder that is already the postponed one offers nothing to postpone.
+    if (allowPostpone) {
+        builder.addAction(
+            0,
+            context.getString(R.string.action_take_before_bed),
+            postponePendingIntent(context)
+        )
+    }
+
     if (strong) {
         builder
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -132,6 +151,44 @@ fun sendPillNotification(
         manager.notify(notificationId, builder.build())
     } else {
         manager.notify(PILL_NOTIFICATION_ID, builder.build())
+    }
+}
+
+private fun postponePendingIntent(context: Context): PendingIntent {
+    val intent = Intent(context, PostponeReminderReceiver::class.java)
+    return PendingIntent.getBroadcast(
+        context,
+        POSTPONE_REQUEST_CODE,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+}
+
+/** Replaces the reminder with a quiet confirmation of the new time. */
+fun notifyReminderPostponed(context: Context, bedtime: LocalTime) {
+    cancelPillNotifications(context)
+
+    val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        .setSmallIcon(R.drawable.ic_stat_name)
+        .setContentTitle(context.getString(R.string.notif_postponed_title))
+        .setContentText(
+            context.getString(R.string.notif_postponed_msg, bedtime.format(bedtimeFormatter))
+        )
+        .setPriority(NotificationCompat.PRIORITY_LOW)
+        .setSilent(true)
+        .setAutoCancel(true)
+        .build()
+
+    val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    manager.notify(POSTPONED_NOTIFICATION_ID, notification)
+}
+
+fun cancelPillNotifications(context: Context) {
+    val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    manager.cancel(PILL_NOTIFICATION_ID)
+    manager.cancel(POSTPONED_NOTIFICATION_ID)
+    for (attempt in 1..ReminderScheduler.MAX_STRONG_REPEATS + 1) {
+        manager.cancel(STRONG_NOTIFICATION_ID_BASE + attempt)
     }
 }
 

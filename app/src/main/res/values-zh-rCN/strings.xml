@@ -17,6 +17,9 @@
     <string name="notif_placebo_msg">该服用安慰剂药片了%1$s！</string>
     <string name="notif_buy_title">补充药品提醒</string>
     <string name="notif_buy_msg">该购买下一盒药了%1$s！</string>
+    <string name="action_take_before_bed">睡前服用</string>
+    <string name="notif_postponed_title">提醒已推迟</string>
+    <string name="notif_postponed_msg">将在 %1$s 再次提醒你。</string>
 
     <!-- 首页 -->
     <string name="date_range">%1$s - %2$s</string>
