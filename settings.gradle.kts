@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "OpenPillReminder"
+rootProject.name = "Anshi"
 include(":app")

@@ -1,78 +1,57 @@
 <div align="center">
   <br>
-  <img alt="App Icon" src="./resources/icons/icon-scalable.svg" width="120" />
-  <h1>OpenPillReminder</h1>
+  <img alt="Anshi app icon" src="./resources/icons/icon-scalable.svg" width="120" />
+  <h1>Anshi / 安时</h1>
 
-  ![GitHub License](https://img.shields.io/github/license/mariinkys/OpenPillReminder)
-  ![GitHub Repo Stars](https://img.shields.io/github/stars/mariinkys/OpenPillReminder)
-  ![GitHub Release](https://img.shields.io/github/v/release/mariinkys/OpenPillReminder)
-  ![IzzyOnDroid Version](https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/dev.mariinkys.OpenPillReminder&label=IzzyOnDroid)
-  ![F-Droid Version](https://img.shields.io/f-droid/v/dev.mariinkys.OpenPillReminder)
-  
-  ![Minimum SDK](https://img.shields.io/badge/Minimum%20SDK-26%20(Android%2008)-839192?logo=android&logoColor=white)
+  ![License](https://img.shields.io/badge/license-GPL--3.0--only-blue)
+  ![Minimum SDK](https://img.shields.io/badge/Minimum%20SDK-26%20(Android%208)-839192?logo=android&logoColor=white)
   ![Target SDK](https://img.shields.io/badge/Target%20SDK-37%20(Android%2017)-566573?logo=android&logoColor=white)
-  
-  <h3>OpenPillReminder is an open source lady pill (birth control) tracker for Android</h3>
 
-  <img alt="Main Window" width="320" src="resources/screenshots/en/main-light.png"/>
-  <img alt="Settings Window" width="320" src="resources/screenshots/en/settings-light.png"/>
-
-  # [Android will become a locked-down platform, FIGHT BACK!](https://keepandroidopen.org/)
+  <h3>简单、私密、完全离线的避孕药提醒</h3>
 </div>
 
-## Installation
+## 中文
 
-<div align="center">
-  <a href="https://github.com/mariinkys/OpenPillReminder/releases/latest">
-    <img src="resources/badges/badge_github.png" alt="Get it on GitHub" height="120" />
-  </a>
-  <a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/mariinkys/OpenPillReminder">
-    <img src="resources/badges/badge_obtainium.png" alt="Get it on Obtainium" height="120" />
-  </a>
-  <a href="https://apt.izzysoft.de/packages/dev.mariinkys.OpenPillReminder">
-    <img src="resources/badges/badge_izzy.png" alt="Get it at IzzyOnDroid" height="122" />
-  </a>
-  <a href="https://f-droid.org/packages/dev.mariinkys.OpenPillReminder">
-    <img src="resources/badges/badge_fdroid.png" alt="Get it on F-Droid" height="120">
-  </a>
-</a>
+安时是一款面向中文用户的开源 Android 避孕药提醒应用。所有设置和服药记录仅保存在设备本地，无账号、无广告、无分析服务。
 
-</div>
+主要功能：
 
-## App Description
+- 按服药周期发送每日提醒
+- 随时暂停提醒，并由用户决定下一周期何时开始
+- 记录已服用药片和备注
+- 提醒开始新药盒或补充药品
+- 支持自定义有效药片和停药天数
+- 本地备份与恢复
+- 支持简体中文和英文
 
-Open Pill Reminder is a simple and reliable way to stay on track with your birth control routine. Setup takes just a moment; select the type of pill pack you use (number of pills) and choose the time you usually take your pill. From there, Open Pill Reminder will send you discreet notifications so you never miss a dose. You can also easily view the status of your current pack at any time.
+安时仅用于辅助提醒和个人记录，不能替代药品说明、医生或药师的专业建议。手机系统设置或第三方应用可能影响通知，请勿将本应用作为唯一提醒方式。
 
-Open Pill Reminder helps you manage your birth control routine with ease—simply, effectively, and for free (no ads either).
+## English
 
-Features:
+Anshi is an open-source Android reminder for birth-control pill routines, designed primarily for Chinese-speaking users. Settings and pill records remain on the device. The app has no accounts, ads, analytics, or tracking.
 
-- Daily reminders so you don’t forget your pill
-- Automatic pause of reminders on days when no pill is required
-- Notifications instead of intrusive alarms
-- Alerts when it’s time to start a new pack or purchase more pills
-- Customizable pack size to support all types of birth control pills
-- Clear display of your current pack status
+Anshi supports Simplified Chinese and English. It provides configurable pill schedules, pause and resume controls, local history, refill reminders, and local backup and restore.
 
-Note: Certain device settings or third-party apps may interfere with notifications. Open Pill Reminder should be used as a supportive tool and not as your sole reminder system. We are not responsible for missed pills due to notification issues.
+Anshi is a supportive reminder and personal record, not medical advice. Device settings or third-party applications may interfere with notifications, so the app should not be the only reminder method you rely on.
 
-## Security & Verification
+## Development
 
-To ensure the integrity of the app, you can verify the signing certificate fingerprint. This fingerprint should match regardless of the version:
+- Application ID: `io.github.anshireminder.app`
+- Current development version: `0.1.0` (`versionCode` 1)
+- Source branch: [`dev/anshi`](https://github.com/HaoranLI9/OpenPillReminder/tree/dev/anshi)
 
-**Developer Certificate Fingerprint (SHA-256):**
+Build a debug APK with:
 
-`B6:74:1E:7C:D2:DA:45:9E:0D:55:FC:FF:C5:4F:98:14:B1:9B:84:55:66:6A:D1:1E:D0:5E:6F:2A:B3:BF:60:BD`
+```shell
+./gradlew assembleDebug
+```
 
-**Package Name**
+## Upstream And License
 
-`dev.mariinkys.OpenPillReminder`
+Anshi is a modified version of [OpenPillReminder](https://github.com/mariinkys/OpenPillReminder), originally created by Alex Marín. The Anshi fork was established in September 2026 and includes Simplified Chinese localization, explicit reminder pause controls, and independent product changes.
 
-### APK Verification
-Every release includes a unique SHA-256 hash of the specific APK file in the [Release Notes](https://github.com/mariinkys/OpenPillReminder/releases). You can use [AppVerifier](https://github.com/soupslurpr/AppVerifier) to compare the installed app against these values.
+Original project copyright 2026 © Alex Marín.
 
-## Copyright and Licensing
+Anshi modifications copyright 2026 © Haoran LI and contributors.
 
-Copyright 2026 © Alex Marín
-
-Released under the terms of the [GPL-3.0](./LICENSE)
+The complete application is distributed under [GNU GPL-3.0-only](./LICENSE). Modified releases must remain under GPL-3.0 and provide the corresponding source code.

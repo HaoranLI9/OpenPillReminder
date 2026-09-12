@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.mariinkys.openPillReminder"
+    namespace = "io.github.anshireminder.app"
 
     //https://developer.android.com/tools/releases/build-tools
     buildToolsVersion = "37.0.0"
@@ -14,11 +14,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.mariinkys.OpenPillReminder"
+        applicationId = "io.github.anshireminder.app"
         minSdk = 26
         targetSdk = 37
-        versionCode = 7
-        versionName = "1.0.6"
+        versionCode = 1
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

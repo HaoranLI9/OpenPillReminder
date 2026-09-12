@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">OpenPillReminder</string>
+    <string name="app_name">Anshi</string>
 
     <string name="home">Home</string>
     <string name="settings">Settings</string>
@@ -86,11 +86,12 @@
     <string name="custom_color">Custom Color</string>
 
     <!-- About -->
-    <string name="author">Author</string>
-    <string name="repository">View Repository</string>
+    <string name="maintained_by">Maintained by</string>
+    <string name="maintainer_name">Anshi contributors</string>
+    <string name="upstream_project">Based on OpenPillReminder by Alex Marín</string>
+    <string name="repository">View source code</string>
     <string name="issues">Report an Issue/Suggestion</string>
     <string name="license">License Info (GPL-3.0)</string>
-    <string name="support">Support the Project ❤️</string>
 
     <!-- Permissions Banners -->
     <string name="notifications_disabled">Notifications are disabled. The app won\'t be able to remind you.</string>

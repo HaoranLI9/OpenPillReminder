@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">吃药提醒</string>
+    <string name="app_name">安时</string>
 
     <string name="home">首页</string>
     <string name="settings">设置</string>
@@ -83,11 +83,12 @@
     <string name="custom_color">自定义颜色</string>
 
     <!-- 关于 -->
-    <string name="author">作者</string>
-    <string name="repository">查看代码仓库</string>
+    <string name="maintained_by">维护者</string>
+    <string name="maintainer_name">安时开源贡献者</string>
+    <string name="upstream_project">基于 OpenPillReminder（原作者 Alex Marín）</string>
+    <string name="repository">查看源代码</string>
     <string name="issues">报告问题/提出建议</string>
     <string name="license">许可证信息（GPL-3.0）</string>
-    <string name="support">支持项目 ❤️</string>
 
     <!-- 权限提示 -->
     <string name="notifications_disabled">通知已关闭，应用将无法提醒你。</string>
