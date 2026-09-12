@@ -8,11 +8,11 @@
 
 用户主动使用备份功能时，应用会将设置和服药记录写入用户选择的文件。该文件的位置、保管和分享完全由用户控制。恢复备份时，应用只读取用户主动选择的文件。
 
-应用需要通知、精确闹钟和开机启动权限，以便按照用户设置发送提醒。应用内的源代码、问题反馈和许可证链接会交由设备浏览器打开。
+应用需要通知、精确闹钟和开机启动权限，以便按照用户设置发送提醒。应用内的原作者主页和许可证链接会交由设备浏览器打开。
 
 源代码：https://github.com/HaoranLI9/OpenPillReminder/tree/dev/anshi
 
-联系邮箱：haoran.li.fr@gmail.com
+联系方式：通过上述仓库的 Issue 反馈。
 
 ## English
 
@@ -22,8 +22,8 @@ The app contains no account system, advertising, analytics SDK, crash-reporting 
 
 When the user starts a backup, the app writes settings and pill records to a file selected by the user. The user controls where that file is stored and whether it is shared. Restore only reads a file explicitly selected by the user.
 
-The app requests notification, exact-alarm, and boot-completed permissions to deliver reminders configured by the user. Source-code, issue-tracker, and license links in the app are opened by the device browser.
+The app requests notification, exact-alarm, and boot-completed permissions to deliver reminders configured by the user. The upstream author page and license links in the app are opened by the device browser.
 
 Source code: https://github.com/HaoranLI9/OpenPillReminder/tree/dev/anshi
 
-Contact: haoran.li.fr@gmail.com
+Contact: through the issue tracker of the repository above.

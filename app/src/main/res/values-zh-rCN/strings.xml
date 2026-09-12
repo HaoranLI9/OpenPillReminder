@@ -94,7 +94,7 @@
 
     <!-- 关于 -->
     <string name="about_original_author">基于 OpenPillReminder，原作者 Alex Marín</string>
-    <string name="about_adapted_by">由 hali 改编</string>
+    <string name="about_adapted_by">由 lmoon 改编</string>
     <string name="license">许可证：GPL-3.0-only</string>
 
     <!-- 权限提示 -->

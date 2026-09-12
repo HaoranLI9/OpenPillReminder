@@ -53,6 +53,6 @@ Anshi is a modified version of [OpenPillReminder](https://github.com/mariinkys/O
 
 Original project copyright 2026 © Alex Marín.
 
-Anshi modifications copyright 2026 © Haoran LI and contributors.
+Anshi modifications copyright 2026 © lmoon and contributors.
 
 The complete application is distributed under [GNU GPL-3.0-only](./LICENSE). Modified releases must remain under GPL-3.0 and provide the corresponding source code.
