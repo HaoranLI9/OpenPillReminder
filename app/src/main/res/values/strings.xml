@@ -96,12 +96,9 @@
     <string name="custom_color">Custom Color</string>
 
     <!-- About -->
-    <string name="maintained_by">Maintained by</string>
-    <string name="maintainer_name">Anshi contributors</string>
-    <string name="upstream_project">Based on OpenPillReminder by Alex Marín</string>
-    <string name="repository">View source code</string>
-    <string name="issues">Report an Issue/Suggestion</string>
-    <string name="license">License Info (GPL-3.0)</string>
+    <string name="about_original_author">Based on OpenPillReminder by Alex Marín</string>
+    <string name="about_adapted_by">Adapted by hali</string>
+    <string name="license">License: GPL-3.0-only</string>
 
     <!-- Permissions Banners -->
     <string name="notifications_disabled">Notifications are disabled. The app won\'t be able to remind you.</string>

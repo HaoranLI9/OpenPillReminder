@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -56,14 +55,8 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-private const val SOURCE_CODE_URL =
-    "https://github.com/HaoranLI9/OpenPillReminder/tree/dev/anshi"
-private const val ISSUE_TRACKER_URL =
-    "https://github.com/HaoranLI9/OpenPillReminder/issues"
-private const val LICENSE_URL =
-    "https://github.com/HaoranLI9/OpenPillReminder/blob/dev/anshi/LICENSE"
-private const val UPSTREAM_PROJECT_URL =
-    "https://github.com/mariinkys/OpenPillReminder"
+private const val UPSTREAM_AUTHOR_URL = "https://mariinkys.dev/"
+private const val GNU_LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0.html"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -379,62 +372,28 @@ fun SettingsScreen(
         val uriHandler = LocalUriHandler.current
         SettingsSection(title = stringResource(R.string.section_about)) {
 
-            // Maintainer
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.maintained_by),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = stringResource(R.string.maintainer_name),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            // Upstream attribution
+            // Upstream author
             TextButton(
-                onClick = { uriHandler.openUri(UPSTREAM_PROJECT_URL) },
+                onClick = { uriHandler.openUri(UPSTREAM_AUTHOR_URL) },
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(0.dp)
             ) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-                    Text(stringResource(R.string.upstream_project), style = MaterialTheme.typography.bodyLarge)
+                    Text(stringResource(R.string.about_original_author), style = MaterialTheme.typography.bodyLarge)
                 }
             }
 
-            // Repository Link
-            TextButton(
-                onClick = { uriHandler.openUri(SOURCE_CODE_URL) },
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-                    Text(stringResource(R.string.repository), style = MaterialTheme.typography.bodyLarge)
-                }
-            }
+            // Fork attribution
+            Text(
+                text = stringResource(R.string.about_adapted_by),
+                modifier = Modifier.padding(vertical = 12.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
-            // Issues Link
+            // License notice
             TextButton(
-                onClick = { uriHandler.openUri(ISSUE_TRACKER_URL) },
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-                    Text(stringResource(R.string.issues), style = MaterialTheme.typography.bodyLarge)
-                }
-            }
-
-            // License Link
-            TextButton(
-                onClick = { uriHandler.openUri(LICENSE_URL) },
+                onClick = { uriHandler.openUri(GNU_LICENSE_URL) },
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(0.dp)
             ) {
