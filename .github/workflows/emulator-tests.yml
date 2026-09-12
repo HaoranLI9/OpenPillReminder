@@ -40,9 +40,9 @@ jobs:
           profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          # The tests grant their own special app access, so nothing here needs
+          # the app installed first.
           script: |
-            adb shell appops set io.github.anshireminder.app SCHEDULE_EXACT_ALARM allow
-            adb shell cmd notification allow_dnd io.github.anshireminder.app 0
             ./gradlew connectedDebugAndroidTest --stacktrace
 
       - name: Upload test reports

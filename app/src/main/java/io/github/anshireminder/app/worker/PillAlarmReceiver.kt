@@ -63,8 +63,8 @@ class PillAlarmReceiver : BroadcastReceiver() {
                         "taken=$alreadyTaken shouldSend=$shouldSend"
                 )
 
-                // Only the daily alarm schedules the next day, and doing so also
-                // clears any nag left over from the previous cycle.
+                // Only the daily alarm schedules the next day. A bedtime attempt
+                // shares repeatIndex 0 but must not move the daily schedule.
                 if (repeatIndex == 0 && settings.pillReminderEnabled) {
                     ReminderScheduler.schedulePillReminder(
                         context,
