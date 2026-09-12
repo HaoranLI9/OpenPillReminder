@@ -50,6 +50,53 @@ class PillReminderPolicyTest {
     }
 
     @Test
+    fun `strong reminders do not repeat when the option is off`() {
+        assertFalse(
+            PillReminderPolicy.shouldRepeat(
+                strongReminderEnabled = false,
+                repeatIndex = 0,
+                maxRepeats = 5,
+            )
+        )
+    }
+
+    @Test
+    fun `strong reminders repeat while attempts remain`() {
+        assertTrue(
+            PillReminderPolicy.shouldRepeat(
+                strongReminderEnabled = true,
+                repeatIndex = 0,
+                maxRepeats = 5,
+            )
+        )
+        assertTrue(
+            PillReminderPolicy.shouldRepeat(
+                strongReminderEnabled = true,
+                repeatIndex = 4,
+                maxRepeats = 5,
+            )
+        )
+    }
+
+    @Test
+    fun `strong reminders stop nagging once the attempt limit is reached`() {
+        assertFalse(
+            PillReminderPolicy.shouldRepeat(
+                strongReminderEnabled = true,
+                repeatIndex = 5,
+                maxRepeats = 5,
+            )
+        )
+        assertFalse(
+            PillReminderPolicy.shouldRepeat(
+                strongReminderEnabled = true,
+                repeatIndex = 9,
+                maxRepeats = 5,
+            )
+        )
+    }
+
+    @Test
     fun `break days stay quiet unless placebo reminders are enabled`() {
         val breakDay = firstPillDate.plusDays(21)
 

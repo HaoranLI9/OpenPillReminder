@@ -16,6 +16,7 @@ import java.time.LocalDate
 class PillAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val pendingResult = goAsync()
+        val repeatIndex = intent.getIntExtra(ReminderScheduler.EXTRA_REPEAT_INDEX, 0)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -30,16 +31,40 @@ class PillAlarmReceiver : BroadcastReceiver() {
                 val todayLog = PillLogRepository(context).pillLogsFlow.first()[today]
                 val alreadyTaken = todayLog?.taken == true
 
-                if (PillReminderPolicy.shouldSend(settings, today, alreadyTaken)) {
-                    sendPillNotification(context, settings.userName, isBreakDay, today)
-                }
+                val shouldSend = PillReminderPolicy.shouldSend(settings, today, alreadyTaken)
 
-                if (settings.pillReminderEnabled) {
+                // Only the daily alarm schedules the next day, and doing so also
+                // clears any nag left over from the previous cycle.
+                if (repeatIndex == 0 && settings.pillReminderEnabled) {
                     ReminderScheduler.schedulePillReminder(
                         context,
                         settings.reminderTime,
                         settings.firstPillDate,
+                        settings.strongReminderEnabled,
                     )
+                }
+
+                if (shouldSend) {
+                    sendPillNotification(
+                        context,
+                        settings.userName,
+                        isBreakDay,
+                        today,
+                        strong = settings.strongReminderEnabled,
+                    )
+
+                    // Strong reminders keep nagging until the pill is logged.
+                    if (
+                        PillReminderPolicy.shouldRepeat(
+                            settings.strongReminderEnabled,
+                            repeatIndex,
+                            ReminderScheduler.MAX_STRONG_REPEATS,
+                        )
+                    ) {
+                        ReminderScheduler.scheduleRepeatPillReminder(context, repeatIndex + 1)
+                    }
+                } else {
+                    ReminderScheduler.cancelRepeatAlarm(context)
                 }
             } finally {
                 pendingResult.finish()

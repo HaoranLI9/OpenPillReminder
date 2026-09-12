@@ -48,6 +48,8 @@ import io.github.anshireminder.app.model.SettingsState
 import io.github.anshireminder.app.model.ThemeMode
 import io.github.anshireminder.app.model.toDisplayString
 import io.github.anshireminder.app.R
+import io.github.anshireminder.app.canUseFullScreenIntent
+import io.github.anshireminder.app.hasDoNotDisturbAccess
 import io.github.anshireminder.app.model.toLocalizedDisplayString
 import java.time.Instant
 import java.time.LocalTime
@@ -131,6 +133,24 @@ fun SettingsScreen(
                     }
                 ),
             )
+
+            SettingsSwitchRow(
+                label = stringResource(R.string.strong_reminder),
+                checked = settings.strongReminderEnabled,
+                onCheckedChange = { onSettingsChange(settings.copy(strongReminderEnabled = it)) },
+                description = stringResource(
+                    if (settings.pillReminderEnabled) {
+                        R.string.strong_reminder_desc
+                    } else {
+                        R.string.strong_reminder_paused_desc
+                    }
+                ),
+                enabled = settings.pillReminderEnabled,
+            )
+
+            if (settings.pillReminderEnabled && settings.strongReminderEnabled) {
+                StrongReminderNotices()
+            }
 
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 OutlinedTextField(
@@ -868,6 +888,50 @@ fun PermissionWarnings(modifier: Modifier = Modifier) {
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun StrongReminderNotices() {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    var fullScreenAllowed by remember { mutableStateOf(canUseFullScreenIntent(context)) }
+    var dndAccess by remember { mutableStateOf(hasDoNotDisturbAccess(context)) }
+
+    // Both accesses are granted outside the app, so re-check on return.
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                fullScreenAllowed = canUseFullScreenIntent(context)
+                dndAccess = hasDoNotDisturbAccess(context)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    if (!fullScreenAllowed) {
+        WarningBanner(
+            text = stringResource(R.string.full_screen_intent_disabled),
+            buttonText = stringResource(R.string.grant),
+            onClick = {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT).apply {
+                    data = Uri.fromParts("package", context.packageName, null)
+                }
+                context.startActivity(intent)
+            }
+        )
+    }
+
+    if (!dndAccess) {
+        WarningBanner(
+            text = stringResource(R.string.dnd_access_disabled),
+            buttonText = stringResource(R.string.grant),
+            onClick = {
+                context.startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
+            }
+        )
     }
 }
 

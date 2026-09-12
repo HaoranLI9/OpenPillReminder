@@ -9,6 +9,8 @@
     <!-- 通知 -->
     <string name="channel_name">服药提醒</string>
     <string name="channel_description">每日服药提醒通知</string>
+    <string name="channel_name_strong">强服药提醒</string>
+    <string name="channel_description_strong">闹钟式提醒，未记录服药前会持续重复</string>
     <string name="notif_pill_title">服药提醒</string>
     <string name="notif_placebo_title">安慰剂提醒</string>
     <string name="notif_pill_msg">该服用药片了%1$s！</string>
@@ -39,6 +41,9 @@
     <string name="pill_reminder_enabled">启用服药提醒</string>
     <string name="pill_reminder_enabled_desc">正在按照当前服药计划发送提醒。</string>
     <string name="pill_reminder_paused_desc">已暂停。确定下次开始日期后再启用。</string>
+    <string name="strong_reminder">强提醒</string>
+    <string name="strong_reminder_desc">未记录服药前每隔几分钟重复提醒，获得授权后会直接全屏弹出。</string>
+    <string name="strong_reminder_paused_desc">启用服药提醒后可用。</string>
     <string name="active_pills">有效药片天数</string>
     <string name="break_days">停药天数</string>
     <string name="placebo_label">停药日服用安慰剂</string>
@@ -95,4 +100,7 @@
     <string name="exact_alarms_disabled">精确提醒已关闭，提醒可能无法按时触发。</string>
     <string name="enable">启用</string>
     <string name="fix">修复</string>
+    <string name="grant">去授权</string>
+    <string name="full_screen_intent_disabled">安时尚未获得全屏提醒权限。授权之前，强提醒只会以普通通知显示。</string>
+    <string name="dnd_access_disabled">尚未获得勿扰模式访问权限，强提醒可能被勿扰模式静音。</string>
 </resources>

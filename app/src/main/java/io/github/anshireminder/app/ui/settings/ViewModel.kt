@@ -76,6 +76,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 getApplication(),
                 settings.reminderTime,
                 settings.firstPillDate,
+                settings.strongReminderEnabled,
             )
 
             if (settings.buyingReminder) {
