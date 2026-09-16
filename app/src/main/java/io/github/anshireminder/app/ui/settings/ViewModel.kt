@@ -9,7 +9,7 @@ import io.github.anshireminder.app.data.PillLogRepository
 import io.github.anshireminder.app.data.SettingsRepository
 import io.github.anshireminder.app.model.FirstDoseReminderNoticePolicy
 import io.github.anshireminder.app.model.SettingsState
-import io.github.anshireminder.app.worker.ReminderScheduler
+import io.github.anshireminder.app.worker.ReminderRescheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -79,24 +79,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     private suspend fun saveToDisk(settings: SettingsState) {
         repository.saveSettings(settings)
-
-        if (settings.pillReminderEnabled) {
-            ReminderScheduler.schedulePillReminder(
-                getApplication(),
-                settings.reminderTime,
-                settings.firstPillDate,
-                settings.strongReminderEnabled,
-            )
-
-            if (settings.buyingReminder) {
-                ReminderScheduler.scheduleBuyingReminder(getApplication(), settings.buyingReminderTime)
-            } else {
-                ReminderScheduler.cancelBuyingAlarm(getApplication())
-            }
-        } else {
-            ReminderScheduler.cancelPillAlarm(getApplication())
-            ReminderScheduler.cancelBuyingAlarm(getApplication())
-        }
+        ReminderRescheduler.applySettings(getApplication(), settings)
 
         maybeShowPastDueFirstDoseWarning(settings)
 
@@ -104,6 +87,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun dismissPastDueFirstDoseWarning() {
         _pastDueFirstDoseWarning.value = null
+    }
+
+    fun rescheduleReminders() {
+        ReminderRescheduler.applySettings(getApplication(), _uiState.value)
     }
 
     private suspend fun maybeShowPastDueFirstDoseWarning(settings: SettingsState) {

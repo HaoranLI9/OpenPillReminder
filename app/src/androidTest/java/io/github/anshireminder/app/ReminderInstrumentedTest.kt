@@ -13,6 +13,7 @@ import io.github.anshireminder.app.data.PillLogRepository
 import io.github.anshireminder.app.data.SettingsRepository
 import io.github.anshireminder.app.model.PillLog
 import io.github.anshireminder.app.model.SettingsState
+import io.github.anshireminder.app.worker.ReminderRescheduler
 import io.github.anshireminder.app.worker.ReminderScheduler
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -135,6 +136,29 @@ class ReminderInstrumentedTest {
         assertEquals(
             "alarm should fire at the start of the bedtime window",
             start.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            next!!.triggerTime,
+        )
+    }
+
+    @Test
+    fun restoringStrongReminderKeepsAlarmClockDelivery() {
+        grantExactAlarmAccess()
+
+        val target = LocalDateTime.now().plusMinutes(10)
+        val settings = SettingsState(
+            hasRequestedPermissions = true,
+            pillReminderEnabled = true,
+            strongReminderEnabled = true,
+            firstPillDate = target.toLocalDate(),
+            reminderTime = target.toLocalTime(),
+        )
+
+        ReminderRescheduler.applySettings(context, settings)
+
+        val next = alarmManager.nextAlarmClock
+        assertTrue("strong reminder was not restored as an alarm clock", next != null)
+        assertEquals(
+            target.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
             next!!.triggerTime,
         )
     }

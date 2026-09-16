@@ -216,6 +216,7 @@ fun AppLayout(
                 backupState = backupState,
                 onCreateBackup = { uri -> settingsViewModel.createBackup(uri) },
                 onRestoreBackup = { uri -> settingsViewModel.restoreBackup(uri) },
+                onExactAlarmPermissionGranted = settingsViewModel::rescheduleReminders,
                 modifier = Modifier.padding(innerPadding),
             )
         }

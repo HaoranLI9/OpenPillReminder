@@ -151,8 +151,13 @@ object ReminderScheduler {
         pendingIntent: PendingIntent,
         asAlarmClock: Boolean,
     ) {
+        if (!alarmManager.canScheduleExactAlarms()) {
+            scheduleInexactFallback(alarmManager, triggerTimeMillis, pendingIntent)
+            return
+        }
+
         try {
-            if (asAlarmClock && alarmManager.canScheduleExactAlarms()) {
+            if (asAlarmClock) {
                 val showIntent = PendingIntent.getActivity(
                     context,
                     SHOW_INTENT_REQUEST_CODE,
@@ -175,11 +180,25 @@ object ReminderScheduler {
                 )
             }
         } catch (e: SecurityException) {
-            // Exact alarms need "Alarms & reminders" access. Rather than drop
-            // the reminder entirely, fall back to an inexact alarm.
-            Log.w(TAG, "exact alarm denied, falling back to inexact", e)
-            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent)
+            // Access can be revoked between the check and the scheduling call.
+            Log.w(TAG, "exact alarm access changed while scheduling", e)
+            scheduleInexactFallback(alarmManager, triggerTimeMillis, pendingIntent)
         }
+    }
+
+    private fun scheduleInexactFallback(
+        alarmManager: AlarmManager,
+        triggerTimeMillis: Long,
+        pendingIntent: PendingIntent,
+    ) {
+        // This is not exact, but unlike set() it can still wake the app while
+        // the device is idle instead of waiting for the app to return.
+        alarmManager.setAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            triggerTimeMillis,
+            pendingIntent,
+        )
+        Log.w(TAG, "exact alarm unavailable; scheduled allow-while-idle fallback")
     }
 
     private fun pillAlarmPendingIntent(
@@ -243,11 +262,13 @@ object ReminderScheduler {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        try {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent)
-        } catch (e: SecurityException) {
-            // TODO: handle Android 14+ case where SCHEDULE_EXACT_ALARM permission is revoked
-        }
+        setAlarm(
+            context = context,
+            alarmManager = alarmManager,
+            triggerTimeMillis = triggerTimeMillis,
+            pendingIntent = pendingIntent,
+            asAlarmClock = false,
+        )
     }
 
     fun cancelBuyingAlarm(context: Context) {

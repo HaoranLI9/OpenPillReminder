@@ -96,7 +96,7 @@ Anshi is not on Google Play. Listing progress for open-source stores will be not
 ## Development
 
 - Application ID: `io.github.anshireminder.app`
-- Current development version: `0.1.0` (`versionCode` 1)
+- Current development version: `0.1.1` (`versionCode` 2)
 - Minimum supported version: Android 15 (API 35)
 - Source branch: [`main`](https://github.com/HaoranLI9/OpenPillReminder/tree/main)
 

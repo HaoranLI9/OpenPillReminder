@@ -1,5 +1,6 @@
 package io.github.anshireminder.app.worker
 
+import android.app.AlarmManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -8,21 +9,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class BootReceiver : BroadcastReceiver() {
+class ExactAlarmPermissionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != Intent.ACTION_BOOT_COMPLETED &&
-            intent.action != Intent.ACTION_MY_PACKAGE_REPLACED
-        ) {
+        if (intent.action != AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED) {
             return
         }
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (!alarmManager.canScheduleExactAlarms()) return
 
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 ReminderRescheduler.restoreSavedSettings(context)
-                Log.i(TAG, "reminders restored after ${intent.action}")
+                Log.i(TAG, "exact alarm access granted; reminders rescheduled")
             } catch (e: Exception) {
-                Log.e(TAG, "failed to restore reminders after ${intent.action}", e)
+                Log.e(TAG, "failed to reschedule after exact alarm access changed", e)
             } finally {
                 pendingResult.finish()
             }

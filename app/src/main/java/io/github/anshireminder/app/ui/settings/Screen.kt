@@ -66,6 +66,7 @@ fun SettingsScreen(
     backupState: SettingsViewModel.BackupUiState,
     onCreateBackup: (Uri) -> Unit,
     onRestoreBackup: (Uri) -> Unit,
+    onExactAlarmPermissionGranted: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -98,7 +99,7 @@ fun SettingsScreen(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         if (settings.pillReminderEnabled) {
-            PermissionWarnings()
+            PermissionWarnings(onExactAlarmPermissionGranted = onExactAlarmPermissionGranted)
         }
 
         // PROFILE
@@ -801,12 +802,16 @@ private fun AddColorDot(onClick: () -> Unit) {
 }
 
 @Composable
-fun PermissionWarnings(modifier: Modifier = Modifier) {
+fun PermissionWarnings(
+    modifier: Modifier = Modifier,
+    onExactAlarmPermissionGranted: () -> Unit = {},
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     var hasNotificationPermission by remember { mutableStateOf(true) }
     var hasExactAlarmPermission by remember { mutableStateOf(true) }
+    var previousExactAlarmPermission by remember { mutableStateOf<Boolean?>(null) }
 
     // re-check permissions every time the user returns to this screen
     DisposableEffect(lifecycleOwner) {
@@ -819,7 +824,12 @@ fun PermissionWarnings(modifier: Modifier = Modifier) {
 
                 val alarmManager =
                     context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                hasExactAlarmPermission = alarmManager.canScheduleExactAlarms()
+                val exactAlarmPermission = alarmManager.canScheduleExactAlarms()
+                if (previousExactAlarmPermission == false && exactAlarmPermission) {
+                    onExactAlarmPermissionGranted()
+                }
+                previousExactAlarmPermission = exactAlarmPermission
+                hasExactAlarmPermission = exactAlarmPermission
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
