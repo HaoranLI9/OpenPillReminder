@@ -24,16 +24,56 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.anshireminder.app.model.PillLog
 import io.github.anshireminder.app.model.SettingsState
 import io.github.anshireminder.app.R
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.delay
+import java.time.Duration
 import java.time.LocalDate
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 private const val PAGE_SIZE = 28
 private const val TOTAL_DAYS = 365
+private const val DATE_ROLLOVER_GRACE_MILLIS = 50L
+
+internal fun millisUntilNextDate(now: ZonedDateTime): Long {
+    val nextDate = now.toLocalDate().plusDays(1).atStartOfDay(now.zone)
+    return Duration.between(now, nextDate).toMillis().coerceAtLeast(1L)
+}
+
+@Composable
+internal fun rememberCurrentDate(
+    currentDateProvider: () -> LocalDate = LocalDate::now,
+    currentDateTimeProvider: () -> ZonedDateTime = ZonedDateTime::now,
+): LocalDate {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val latestDateProvider by rememberUpdatedState(currentDateProvider)
+    val latestDateTimeProvider by rememberUpdatedState(currentDateTimeProvider)
+    var currentDate by remember { mutableStateOf(currentDateProvider()) }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                currentDate = latestDateProvider()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    LaunchedEffect(currentDate) {
+        delay(millisUntilNextDate(latestDateTimeProvider()) + DATE_ROLLOVER_GRACE_MILLIS)
+        currentDate = latestDateProvider()
+    }
+
+    return currentDate
+}
 
 @Composable
 fun HomeScreen(
@@ -61,12 +101,20 @@ fun HomeScreen(
     val pages = allDates.chunked(PAGE_SIZE)
     val totalPages = pages.size
 
-    val today = LocalDate.now()
+    val today = rememberCurrentDate()
     val todayIndex = allDates.indexOfFirst { it == today || it.isAfter(today) }.coerceAtLeast(0)
-    val initialPage = (todayIndex / PAGE_SIZE).coerceIn(0, totalPages - 1)
+    val todayPage = (todayIndex / PAGE_SIZE).coerceIn(0, totalPages - 1)
 
-    val pagerState = rememberPagerState(initialPage = initialPage, pageCount = { totalPages })
+    val pagerState = rememberPagerState(initialPage = todayPage, pageCount = { totalPages })
+    var previousTodayPage by remember(firstDate) { mutableIntStateOf(todayPage) }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+
+    LaunchedEffect(todayPage) {
+        if (todayPage != previousTodayPage && pagerState.currentPage == previousTodayPage) {
+            pagerState.scrollToPage(todayPage)
+        }
+        previousTodayPage = todayPage
+    }
 
     LaunchedEffect(Unit) {
         notificationEvents.collect { dateString ->
@@ -127,6 +175,7 @@ fun HomeScreen(
                                         isBreakDay = isBreakDay,
                                         isTaken = isTaken,
                                         isFuture = isFuture,
+                                        isToday = date == today,
                                         size = bubbleSize,
                                         onClick = { if (!isFuture) selectedDate = date }
                                     )
@@ -203,14 +252,13 @@ fun PillBubble(
     isBreakDay: Boolean,
     isTaken: Boolean,
     isFuture: Boolean,
+    isToday: Boolean,
     size: Dp,
     onClick: () -> Unit
 ) {
     val locale = androidx.compose.ui.text.intl.Locale.current.platformLocale
     val formatterDay = DateTimeFormatter.ofPattern("EEE", locale)
     val formatterDate = DateTimeFormatter.ofPattern("d", locale)
-    val isToday = date == LocalDate.now()
-
     val colors = MaterialTheme.colorScheme
     val targetColor = when {
         isTaken -> colors.primary
