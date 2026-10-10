@@ -24,7 +24,7 @@
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
     <string name="pill_schedule_paused_title">Recordatorios Pausados</string>
-    <string name="pill_schedule_paused_message">No se enviarán recordatorios de ningún tipo. Cuando estes listo, escoge la fecha de la primera pastilla en los Ajustes, luego, activa los recordatorios.</string>
+    <string name="pill_schedule_paused_message">No se enviarán recordatorios de ningún tipo. Cuando estés listo, escoge la fecha de la primera pastilla en los Ajustes, luego, activa los recordatorios.</string>
 
     <!-- SETTINGS SCREEN -->
 
