@@ -13,6 +13,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,13 +43,9 @@ fun HomeScreen(
     settings: SettingsState,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(),
+    onOpenSettings: () -> Unit,
     notificationEvents: Flow<String>,
 ) {
-    if (!settings.pillReminderEnabled) {
-        PausedScheduleContent(modifier)
-        return
-    }
-
     val locale = androidx.compose.ui.text.intl.Locale.current.platformLocale
 
     val pillLogs by viewModel.pillLogs.collectAsState()
@@ -79,6 +78,10 @@ fun HomeScreen(
     val daysPerRow = if (isLandscape) 7 else 4
 
     Column(modifier = modifier.fillMaxSize()) {
+        if (!settings.pillReminderEnabled) {
+            PausedScheduleBanner(onOpenSettings)
+        }
+
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.weight(1f)
@@ -158,11 +161,10 @@ fun HomeScreen(
             isBreakDay = isBreakDay,
             log = existingLog,
             onDismiss = {
-                @Suppress("AssignedValueIsNeverRead")
-                selectedDate = null },
+                selectedDate = null
+            },
             onSave = { updatedLog ->
                 viewModel.saveLog(updatedLog)
-                @Suppress("AssignedValueIsNeverRead")
                 selectedDate = null
             }
         )
@@ -170,30 +172,62 @@ fun HomeScreen(
 }
 
 @Composable
-private fun PausedScheduleContent(modifier: Modifier = Modifier) {
-    Box(
+private fun PausedScheduleBanner(onOpenSettings: () -> Unit, modifier: Modifier = Modifier) {
+    var showDetails by remember { mutableStateOf(false) }
+
+    Card(
+        onClick = { showDetails = true },
         modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center,
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
     ) {
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.pill_schedule_paused_title),
-                    style = MaterialTheme.typography.headlineSmall,
-                )
-                Text(
-                    text = stringResource(R.string.pill_schedule_paused_message),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+            )
+            Text(
+                text = stringResource(R.string.pill_schedule_paused_title),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1f),
+            )
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+            )
         }
+    }
+
+    if (showDetails) {
+        AlertDialog(
+            onDismissRequest = { showDetails = false },
+            title = { Text(stringResource(R.string.pill_schedule_paused_title)) },
+            text = { Text(stringResource(R.string.pill_schedule_paused_message)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDetails = false
+                        onOpenSettings()
+                    }
+                ) {
+                    Text(stringResource(R.string.settings))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDetails = false }) {
+                    Text(stringResource(R.string.ok))
+                }
+            },
+        )
     }
 }
 

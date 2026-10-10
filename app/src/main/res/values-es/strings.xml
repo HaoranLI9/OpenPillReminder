@@ -24,7 +24,7 @@
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
     <string name="pill_schedule_paused_title">Recordatorios Pausados</string>
-    <string name="pill_schedule_paused_message">No se enviarán recordatorios de ningún tipo. Cuando estés listo, escoge la fecha de la primera pastilla en los Ajustes, luego, activa los recordatorios.</string>
+    <string name="pill_schedule_paused_message">No se enviarán recordatorios de pastillas ni de compra. Puedes volver a activarlos en Ajustes cuando quieras. Si tu ciclo ha cambiado, actualiza antes la fecha de la primera pastilla.</string>
 
     <!-- SETTINGS SCREEN -->
 
@@ -41,7 +41,7 @@
     <string name="your_name">Tu nombre</string>
     <string name="pill_reminder_enabled">Activar recordatorios de pastillas</string>
     <string name="pill_reminder_enabled_desc">Los recordatorios están activos para el calendario de pastillas actual.</string>
-    <string name="pill_reminder_paused_desc">En pausa. Selecciona la fecha de la próxima primera pastilla y actívalo cuando quieras.</string>
+    <string name="pill_reminder_paused_desc">En pausa. Si tu ciclo ha cambiado, actualiza la fecha de la primera pastilla antes de activarlo.</string>
     <string name="active_pills">Pastillas activas</string>
     <string name="break_days">Días de descanso</string>
     <string name="placebo_label">Placebos en días de descanso</string>
